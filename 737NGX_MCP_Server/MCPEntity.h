@@ -13,40 +13,40 @@ using namespace std;
 class MCPEntity : public SimConnectEntity
 {
 public:
-	explicit MCPEntity( const string & name );
-	virtual ~MCPEntity();
+    explicit MCPEntity( const string & name );
+    virtual ~MCPEntity();
 
     void setup();
-	void dispatch( SIMCONNECT_RECV *data, DWORD size, void *context );
-	void close();
+    void dispatch( SIMCONNECT_RECV *data, DWORD size, void *context );
+    void close();
 
 protected:
-	enum DataRequestId
-	{
-		DATA_REQUEST,
-		CONTROL_REQUEST,
-		AIR_PATH_REQUEST
-	};
+    enum DataRequestId
+    {
+        DATA_REQUEST,
+        CONTROL_REQUEST,
+        AIR_PATH_REQUEST
+    };
 
-	enum EventId
-	{
-		EVENT_HEADING_SELECTOR,
-		EVENT_KEYBOARD_A
-	};
+    enum EventId
+    {
+        EVENT_HEADING_SELECTOR,
+        EVENT_KEYBOARD_A
+    };
 
-	enum InputId
-	{
-		INPUT
-	};
+    enum InputId
+    {
+        INPUT
+    };
 
-	enum GroupId
-	{
-		GROUP_KEYBOARD
-	};
+    enum GroupId
+    {
+        GROUP_KEYBOARD
+    };
 
-	void setupDataConnection();
-	void setupControlConnection();
+    void setupDataConnection();
+    void setupControlConnection();
 
 
-	PMDG_NGX_Control control;
+    PMDG_NGX_Control control;
 };

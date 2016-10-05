@@ -14,18 +14,18 @@ using namespace std;
 class SimConnectClient
 {
 public:
-	explicit SimConnectClient();
-	virtual ~SimConnectClient();
+    explicit SimConnectClient();
+    virtual ~SimConnectClient();
 
-	void connect();
-	void run();
+    void connect();
+    void run();
 
-	void addEntity( SimConnectEntity *entity );
+    void addEntity( SimConnectEntity *entity );
 
 protected:
-	static void CALLBACK dispatch( SIMCONNECT_RECV* data, DWORD size, void *context );
+    static void CALLBACK dispatch( SIMCONNECT_RECV* data, DWORD size, void *context );
 
-	HANDLE simConnect;
-	vector<SimConnectEntity *> entities;
-	bool quit;
+    HANDLE simConnect;
+    vector<SimConnectEntity *> entities;
+    bool quit;
 };

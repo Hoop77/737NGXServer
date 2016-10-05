@@ -5,9 +5,9 @@ using namespace TCP;
 
 
 TCPStream::TCPStream( SOCKET socket, const string peerIP, uint16_t peerPort )
-	: socket( socket )
-	, peerIP( peerIP )
-	, peerPort( peerPort ) {}
+    : socket( socket )
+    , peerIP( peerIP )
+    , peerPort( peerPort ) {}
 
 
 TCPStream::~TCPStream()
@@ -18,23 +18,23 @@ TCPStream::~TCPStream()
 
 size_t TCPStream::send( const char *buffer, size_t len )
 {
-    int result = ::send( socket, buffer, (int)len, 0 );
+    int result = ::send( socket, buffer, (int) len, 0 );
 
-	if( result < 0 )
-		throw TCPException( "send failed" );
-	
-	return result;
+    if( result < 0 )
+        throw TCPException( "send failed" );
+
+    return result;
 }
 
 
 size_t TCPStream::receive( char *buffer, size_t len )
 {
-	int result = ::recv( socket, buffer, len, 0 );
+    int result = ::recv( socket, buffer, len, 0 );
 
-	if( result < 0 )
-		throw TCPException( "recv failed" );
-	
-	return result;
+    if( result < 0 )
+        throw TCPException( "recv failed" );
+
+    return result;
 }
 
 

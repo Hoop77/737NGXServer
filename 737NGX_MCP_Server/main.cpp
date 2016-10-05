@@ -61,37 +61,37 @@ using namespace TCP;
 
 int __cdecl main( void )
 {
-	TCP::init();
+    TCP::init();
 
-	TCPStream *stream = NULL;
-	TCPAcceptor *acceptor = NULL;
+    TCPStream *stream = NULL;
+    TCPAcceptor *acceptor = NULL;
 
-	acceptor = new TCPAcceptor( "127.0.0.1", 7654 );
+    acceptor = new TCPAcceptor( "127.0.0.1", 7654 );
 
-	acceptor->start();
+    acceptor->start();
 
-	while( 1 )
-	{
-		stream = acceptor->accept();
-		if( stream != NULL )
-		{
-			size_t len;
-			char line[ 256 ];
-			while( (len = stream->receive( line, sizeof( line ) )) > 0 )
-			{
-				line[ len ] = NULL;
-				printf( "received - %s\n", line );
-				stream->send( line, len );
-			}
-			delete stream;
-		}
-	}
+    while( 1 )
+    {
+        stream = acceptor->accept();
+        if( stream != NULL )
+        {
+            size_t len;
+            char line[ 256 ];
+            while( (len = stream->receive( line, sizeof( line ) )) > 0 )
+            {
+                line[ len ] = NULL;
+                printf( "received - %s\n", line );
+                stream->send( line, len );
+            }
+            delete stream;
+        }
+    }
 
-	TCP::cleanup();
+    TCP::cleanup();
 
-	getchar();
+    getchar();
 
-	return 0;
+    return 0;
 }
 
 

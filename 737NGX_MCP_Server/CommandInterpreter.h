@@ -7,8 +7,8 @@ using namespace std;
 class CommandInterpreter
 {
 public:
-	explicit CommandInterpreter() {}
-	virtual ~CommandInterpreter() {}
+    explicit CommandInterpreter() {}
+    virtual ~CommandInterpreter() {}
 
-	virtual void interpretCommand( const string & cmd ) = 0;
+    virtual void interpretCommand( const string & cmd ) = 0;
 };

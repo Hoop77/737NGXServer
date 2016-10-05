@@ -11,18 +11,18 @@ using namespace std;
 class SimConnectEntity
 {
 public:
-	explicit SimConnectEntity( const string name = "" );
-	virtual ~SimConnectEntity();
+    explicit SimConnectEntity( const string name = "" );
+    virtual ~SimConnectEntity();
 
-	virtual void setup() = 0;
-	virtual void dispatch( SIMCONNECT_RECV *data, DWORD size, void *context ) = 0;
-	virtual void close() = 0;
+    virtual void setup() = 0;
+    virtual void dispatch( SIMCONNECT_RECV *data, DWORD size, void *context ) = 0;
+    virtual void close() = 0;
 
-	void obtainSimConnectHandle( HANDLE simConnect );
-	string getName() const;
+    void obtainSimConnectHandle( HANDLE simConnect );
+    string getName() const;
 
 protected:
-	const string name;
-	HANDLE simConnect;
+    const string name;
+    HANDLE simConnect;
 };
 

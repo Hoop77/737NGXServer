@@ -16,7 +16,7 @@ namespace TCP
     private:
         SOCKET listenSocket;
         const string address;
-		uint16_t port;
+        uint16_t port;
         bool listening;
     };
 }

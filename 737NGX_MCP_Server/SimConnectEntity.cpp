@@ -2,7 +2,7 @@
 
 
 SimConnectEntity::SimConnectEntity( const string name )
-	: name( name ) {}
+    : name( name ) {}
 
 
 SimConnectEntity::~SimConnectEntity() {}
@@ -10,11 +10,11 @@ SimConnectEntity::~SimConnectEntity() {}
 
 void SimConnectEntity::obtainSimConnectHandle( HANDLE simConnect )
 {
-	this->simConnect = simConnect;
+    this->simConnect = simConnect;
 }
 
 
 string SimConnectEntity::getName() const
 {
-	return name;
+    return name;
 }

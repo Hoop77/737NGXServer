@@ -3,7 +3,7 @@
 
 
 MCPInterpreter::MCPInterpreter( MCPEntity *mcp )
-	: mcp( mcp ) {}
+    : mcp( mcp ) {}
 
 
 MCPInterpreter::~MCPInterpreter() {}
@@ -11,8 +11,8 @@ MCPInterpreter::~MCPInterpreter() {}
 
 void MCPInterpreter::interpretCommand( const string cmd )
 {
-	if( cmd == "test" )
-	{
-		cout << "MCP test!" << endl;
-	}
+    if( cmd == "test" )
+    {
+        cout << "MCP test!" << endl;
+    }
 }

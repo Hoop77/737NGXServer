@@ -6,12 +6,12 @@
 class MCPInterpreter : public CommandInterpreter
 {
 public:
-	explicit MCPInterpreter( MCPEntity *mcp );
-	virtual ~MCPInterpreter();
+    explicit MCPInterpreter( MCPEntity *mcp );
+    virtual ~MCPInterpreter();
 
-	void interpretCommand( const string cmd );
+    void interpretCommand( const string cmd );
 
 private:
-	MCPEntity *mcp;
+    MCPEntity *mcp;
 };
 

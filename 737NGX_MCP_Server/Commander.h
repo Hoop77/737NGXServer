@@ -11,19 +11,19 @@ using namespace std;
 class Commander
 {
 public:
-	explicit Commander();
-	virtual ~Commander();
+    explicit Commander();
+    virtual ~Commander();
 
-	void startListening();
-	void stopListening();
-	bool isListening();
-	void addInterpreter( CommandInterpreter *cmdInterpreter );
+    void startListening();
+    void stopListening();
+    bool isListening();
+    void addInterpreter( CommandInterpreter *cmdInterpreter );
 
 protected:
     static void listen( Commander *self );
 
-	thread *listeningThread;
-	bool listening;
-	vector<CommandInterpreter *> interpreters;
+    thread *listeningThread;
+    bool listening;
+    vector<CommandInterpreter *> interpreters;
 };
 

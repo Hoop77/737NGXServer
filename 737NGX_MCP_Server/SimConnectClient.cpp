@@ -1,9 +1,11 @@
 #include "SimConnectClient.h"
 
 
-// static
-vector<SimConnectEntity *> SimConnectClient::entities;
-bool SimConnectClient::quit = false;
+SimConnectClient::SimConnectClient()
+	: quit( false ) {}
+
+
+SimConnectClient::~SimConnectClient() {}
 
 
 void SimConnectClient::addEntity( SimConnectEntity *entity )
@@ -14,7 +16,6 @@ void SimConnectClient::addEntity( SimConnectEntity *entity )
 
 void SimConnectClient::connect()
 {
-	HANDLE simConnect = NULL;
 	const string errorMsg = "Unable to connect to SimConnect!";
 
 	// open simconnect
@@ -44,11 +45,15 @@ void SimConnectClient::connect()
 	}
 
 	cout << "Connected to Flight Simulator!\n" << endl;
+}
 
+
+void SimConnectClient::run()
+{
 	// main loop
 	while( !quit )
 	{
-		SimConnect_CallDispatch( simConnect, &SimConnectClient::dispatch, NULL );
+		SimConnect_CallDispatch( simConnect, &SimConnectClient::dispatch, this );
 
 		Sleep( 1 );
 	}
@@ -66,14 +71,16 @@ void SimConnectClient::connect()
 
 void CALLBACK SimConnectClient::dispatch( SIMCONNECT_RECV *data, DWORD size, void *context )
 {
+	SimConnectClient *self = static_cast<SimConnectClient *>( context );
+
 	if( data->dwID == SIMCONNECT_RECV_ID_QUIT )
 	{
-		quit = true;
+		self->quit = true;
 	}
 	else
 	{
 		// call each entity's dispatch routine
-		for( auto entity : entities )
+		for( auto entity : self->entities )
 		{
 			entity->dispatch( data, size, context );
 		}

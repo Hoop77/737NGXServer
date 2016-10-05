@@ -11,7 +11,7 @@ using namespace std;
 class SimConnectEntity
 {
 public:
-	explicit SimConnectEntity( const string & name );
+	explicit SimConnectEntity( const string name = "" );
 	virtual ~SimConnectEntity();
 
 	virtual void setup() = 0;
@@ -19,10 +19,10 @@ public:
 	virtual void close() = 0;
 
 	void obtainSimConnectHandle( HANDLE simConnect );
-	const string & getName() const;
+	string getName() const;
 
 protected:
-	string name;
+	const string name;
 	HANDLE simConnect;
 };
 

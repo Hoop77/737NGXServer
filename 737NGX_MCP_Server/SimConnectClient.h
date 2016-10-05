@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <thread>
 
 #include <Windows.h>
 #include "SimConnect.h"
@@ -13,12 +14,18 @@ using namespace std;
 class SimConnectClient
 {
 public:
-	static void addEntity( SimConnectEntity *entity );
-	static void connect();
+	explicit SimConnectClient();
+	virtual ~SimConnectClient();
+
+	void connect();
+	void run();
+
+	void addEntity( SimConnectEntity *entity );
 
 protected:
 	static void CALLBACK dispatch( SIMCONNECT_RECV* data, DWORD size, void *context );
 
-	static vector<SimConnectEntity *> entities;
-	static bool quit;
+	HANDLE simConnect;
+	vector<SimConnectEntity *> entities;
+	bool quit;
 };

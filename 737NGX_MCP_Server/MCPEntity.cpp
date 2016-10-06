@@ -1,7 +1,7 @@
 #include "MCPEntity.h"
 
 
-MCPEntity::MCPEntity( const string & name )
+MCPEntity::MCPEntity( string name )
     : SimConnectEntity( name ) {}
 
 

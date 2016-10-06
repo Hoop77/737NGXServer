@@ -19,13 +19,7 @@ void SimConnectClient::connect()
     const string errorMsg = "Unable to connect to SimConnect!";
 
     // open simconnect
-    HRESULT result = SimConnect_Open(
-        &simConnect,
-        "737NGX Server",
-        NULL,
-        0,
-        0,
-        0 );
+    HRESULT result = SimConnect_Open( &simConnect, "737NGX Server", NULL, 0, 0, 0 );
 
     if( result == E_FAIL ) throw errorMsg;
 

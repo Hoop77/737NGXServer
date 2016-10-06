@@ -1,10 +1,12 @@
 #include "TCPConnector.h"
-
-
+#include "TCPStream.h"
+#include "TCP.h"
+#include "TCPException.h"
 using namespace TCP;
 
 
-TCPStream *TCPConnector::connect( const string server, uint16_t port )
+Stream *
+Connector::connect( const string &server, uint16_t port )
 {
     int iResult;
     SOCKET connectSocket;
@@ -20,15 +22,15 @@ TCPStream *TCPConnector::connect( const string server, uint16_t port )
 
     // Resolve server address and port.
     iResult = getaddrinfo(
-        server.c_str(),             // server name
-        to_string( port ).c_str(),  // port
-        &hints,                     // hints
-        &addrinfoResult             // result
+        server.c_str(),                 // server name
+        std::to_string( port ).c_str(), // port
+        &hints,                         // hints
+        &addrinfoResult                 // result
     );
 
     if( iResult != 0 )
     {
-        throw TCPException( "getaddrinfo failed" );
+        throw Exception( "getaddrinfo failed" );
     }
 
     // Attempt to connect to an address until one succeseds.
@@ -44,7 +46,7 @@ TCPStream *TCPConnector::connect( const string server, uint16_t port )
         if( connectSocket == INVALID_SOCKET )
         {
             freeaddrinfo( addrinfoResult );
-            throw TCPException( "socket failed" );
+            throw Exception( "socket failed" );
         }
 
         // Connect to server.
@@ -67,14 +69,14 @@ TCPStream *TCPConnector::connect( const string server, uint16_t port )
     if( connectSocket == INVALID_SOCKET )
     {
         freeaddrinfo( addrinfoResult );
-        throw TCPException( "unable to connect to server" );
+        throw Exception( "unable to connect to server" );
     }
 
-    // Create new TCPStream object.
-    TCPStream *tcpStream = new TCPStream( connectSocket, server, port );
+    // Create new TCP Stream object.
+    Stream *stream = new Stream( connectSocket, server, port );
 
     // Throw addressinfo data away.
     freeaddrinfo( addrinfoResult );
 
-    return tcpStream;
+    return stream;
 }

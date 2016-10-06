@@ -1,26 +1,31 @@
 #pragma once
 
-#include <iostream>
-#include <string>
 
 #include "SimConnectEntity.h"
 #include "SimConnect.h"
 #include "PMDG_NGX_SDK.h"
+#include "MCPInterpreter.h"
 
+
+#include <iostream>
+#include <string>
 using namespace std;
+
 
 // Multi Control Panel
 class MCPEntity : public SimConnectEntity
 {
 public:
-    explicit MCPEntity( const string & name );
+    friend class MCPInterpreter;
+
+    explicit MCPEntity( string name );
     virtual ~MCPEntity();
 
     void setup();
     void dispatch( SIMCONNECT_RECV *data, DWORD size, void *context );
     void close();
 
-protected:
+private:
     enum DataRequestId
     {
         DATA_REQUEST,
@@ -46,7 +51,6 @@ protected:
 
     void setupDataConnection();
     void setupControlConnection();
-
 
     PMDG_NGX_Control control;
 };

@@ -80,16 +80,16 @@
     <ClInclude Include="TCP.h">
       <Filter>Headerdateien\TCP</Filter>
     </ClInclude>
-    <ClInclude Include="TCPStream.h">
-      <Filter>Headerdateien\TCP</Filter>
-    </ClInclude>
-    <ClInclude Include="TCPException.h">
+    <ClInclude Include="TCPAcceptor.h">
       <Filter>Headerdateien\TCP</Filter>
     </ClInclude>
     <ClInclude Include="TCPConnector.h">
       <Filter>Headerdateien\TCP</Filter>
     </ClInclude>
-    <ClInclude Include="TCPAcceptor.h">
+    <ClInclude Include="TCPStream.h">
+      <Filter>Headerdateien\TCP</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPException.h">
       <Filter>Headerdateien\TCP</Filter>
     </ClInclude>
   </ItemGroup>

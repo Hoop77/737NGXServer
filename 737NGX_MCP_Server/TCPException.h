@@ -2,15 +2,14 @@
 
 
 #include <exception>
-using namespace std;
 
 
 namespace TCP
 {
-    class TCPException : public exception
+    class Exception : public std::exception
     {
     public:
-        TCPException( const char *msg )
+        Exception( const char *msg )
             : msg( msg ) {}
 
         const char *what() const throw() { return msg; }

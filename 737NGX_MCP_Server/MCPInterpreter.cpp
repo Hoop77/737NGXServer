@@ -9,7 +9,7 @@ MCPInterpreter::MCPInterpreter( MCPEntity *mcp )
 MCPInterpreter::~MCPInterpreter() {}
 
 
-void MCPInterpreter::interpretCommand( const string cmd )
+void MCPInterpreter::interpretCommand( string cmd )
 {
     if( cmd == "test" )
     {

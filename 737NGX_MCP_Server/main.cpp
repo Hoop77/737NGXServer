@@ -54,38 +54,41 @@
 #include "TCP.h"
 #include "TCPAcceptor.h"
 #include "TCPStream.h"
-
-
-using namespace TCP;
+#include <memory>
+#include <thread>
+#include <iostream>
 
 
 int __cdecl main( void )
 {
     TCP::init();
 
-    TCPStream *stream = NULL;
-    TCPAcceptor *acceptor = NULL;
-
-    acceptor = new TCPAcceptor( "127.0.0.1", 7654 );
+    TCP::Acceptor *acceptor = new TCP::Acceptor( "127.0.0.1", 7654 );
 
     acceptor->start();
 
-    while( 1 )
-    {
-        stream = acceptor->accept();
-        if( stream != NULL )
+    TCP::Stream *stream = acceptor->accept();
+
+    std::thread readThread( [&] () {
+        size_t len;
+        char buf[ 256 ];
+        while( len = stream->read( buf, 256 ) > 0 )
         {
-            size_t len;
-            char line[ 256 ];
-            while( (len = stream->receive( line, sizeof( line ) )) > 0 )
-            {
-                line[ len ] = NULL;
-                printf( "received - %s\n", line );
-                stream->send( line, len );
-            }
-            delete stream;
+            buf[ len ] = '\0';
+            std::cout << "received: " << buf << endl;
         }
-    }
+    } );
+
+    std::thread writeThread( [&]() {
+        char *buf = "Spam!";
+        size_t len = strlen( buf ) + 1;
+        while( len = stream->write( buf, len ) > 0 );
+    } );
+
+    readThread.join();
+    writeThread.join();
+
+    delete acceptor;
 
     TCP::cleanup();
 

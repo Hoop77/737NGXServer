@@ -1,17 +1,28 @@
 #pragma once
 
+
+#include "TCP.h"
 #include "TCPStream.h"
+
+
+#include <string>
+using namespace std;
+
 
 namespace TCP
 {
-    class TCPAcceptor
+    class Acceptor
     {
     public:
-        TCPAcceptor( const string address, uint16_t port );
-        ~TCPAcceptor();
+        explicit Acceptor( const string &address, uint16_t port );
+        virtual ~Acceptor();
+
+        // Copy protection since destructor closes the listening socket.
+        Acceptor( const Acceptor &other ) = delete;
+        Acceptor &operator=( const Acceptor &other ) = delete;
 
         void start();
-        TCPStream *accept();
+        Stream *accept();
 
     private:
         SOCKET listenSocket;

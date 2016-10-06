@@ -1,37 +1,40 @@
 #pragma once
 
 
-#include <iostream>
-#include <string>
-
-
 #include "TCP.h"
 
 
-using namespace std;
+#include <string>
+
 
 namespace TCP
 {
-    class TCPStream
+    class Stream
     {
-        friend class TCPAcceptor;
-        friend class TCPConnector;
+        friend class Acceptor;
+        friend class Connector;
 
     public:
-        virtual ~TCPStream();
+        // No public constructor because a Stream can only be created by Acceptors and Connectors.
 
-        size_t send( const char *buffer, size_t len );
-        size_t receive( char *buffer, size_t len );
+        virtual ~Stream();
 
-        string getPeerIP();
-        uint16_t getPeerPort();
+        // Copy protection since destructor closes the socket.
+        Stream( const Stream &other ) = delete;
+        Stream &operator=( const Stream &other ) = delete;
+
+        size_t write( const char *buffer, size_t len );
+        size_t read( char *buffer, size_t len );
+
+        std::string getPeerIP() const;
+        uint16_t getPeerPort() const;
 
     private:
-        TCPStream( SOCKET socket, const string peerIP, uint16_t peerPort );
-
+        explicit Stream( SOCKET socket, const std::string &peerIP, uint16_t peerPort );
+        
         SOCKET socket;
-        const string peerIP;
-        uint16_t peerPort;
+        const std::string peerIP;
+        const uint16_t peerPort;
     };
 }
 

@@ -22,7 +22,7 @@ public:
 
     void addEntity( SimConnectEntity *entity );
 
-protected:
+private:
     static void CALLBACK dispatch( SIMCONNECT_RECV* data, DWORD size, void *context );
 
     HANDLE simConnect;

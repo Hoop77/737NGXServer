@@ -1,50 +1,54 @@
 #include "TCPStream.h"
-
-
+#include "TCP.h"
+#include "TCPException.h"
 using namespace TCP;
 
 
-TCPStream::TCPStream( SOCKET socket, const string peerIP, uint16_t peerPort )
+Stream::Stream( SOCKET socket, const std::string &peerIP, uint16_t peerPort )
     : socket( socket )
     , peerIP( peerIP )
     , peerPort( peerPort ) {}
 
 
-TCPStream::~TCPStream()
+Stream::~Stream()
 {
     closesocket( socket );
 }
 
 
-size_t TCPStream::send( const char *buffer, size_t len )
+size_t
+Stream::write( const char *buffer, size_t len )
 {
     int result = ::send( socket, buffer, (int) len, 0 );
 
     if( result < 0 )
-        throw TCPException( "send failed" );
+        throw Exception( "send failed" );
 
     return result;
 }
 
 
-size_t TCPStream::receive( char *buffer, size_t len )
+size_t 
+Stream::read( char *buffer, size_t len )
 {
     int result = ::recv( socket, buffer, len, 0 );
 
     if( result < 0 )
-        throw TCPException( "recv failed" );
+        throw Exception( "recv failed" );
 
     return result;
 }
 
 
-string TCPStream::getPeerIP()
+std::string
+Stream::getPeerIP() const
 {
     return peerIP;
 }
 
 
-uint16_t TCPStream::getPeerPort()
+uint16_t 
+Stream::getPeerPort() const
 {
     return peerPort;
 }

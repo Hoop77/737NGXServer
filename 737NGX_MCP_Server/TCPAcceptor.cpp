@@ -1,17 +1,18 @@
 #include "TCPAcceptor.h"
-
-
+#include "TCP.h"
+#include "TCPException.h"
+#include "TCPStream.h"
 using namespace TCP;
 
 
-TCPAcceptor::TCPAcceptor( const string address, uint16_t port )
+Acceptor::Acceptor( const string &address, uint16_t port )
     : listenSocket( INVALID_SOCKET )
     , address( address )
     , port( port )
     , listening( false ) {}
 
 
-TCPAcceptor::~TCPAcceptor()
+Acceptor::~Acceptor()
 {
     if( listenSocket != INVALID_SOCKET )
     {
@@ -20,7 +21,8 @@ TCPAcceptor::~TCPAcceptor()
 }
 
 
-void TCPAcceptor::start()
+void 
+Acceptor::start()
 {
     int iResult;
 
@@ -45,17 +47,17 @@ void TCPAcceptor::start()
     if( address.size() == 0 )
     {
         // Any IP address.
-        iResult = getaddrinfo( NULL, to_string( port ).c_str(), &hints, &addrinfoResult );
+        iResult = getaddrinfo( NULL, std::to_string( port ).c_str(), &hints, &addrinfoResult );
     }
     else
     {
         // IP address specified.
-        iResult = getaddrinfo( address.c_str(), to_string( port ).c_str(), &hints, &addrinfoResult );
+        iResult = getaddrinfo( address.c_str(), std::to_string( port ).c_str(), &hints, &addrinfoResult );
     }
 
     if( iResult != 0 )
     {
-        throw TCPException( "getaddrinfo failed" );
+        throw Exception( "getaddrinfo failed" );
     }
 
     // Create a SOCKET for connecting to server.
@@ -63,7 +65,7 @@ void TCPAcceptor::start()
     if( listenSocket == INVALID_SOCKET )
     {
         freeaddrinfo( addrinfoResult );
-        throw TCPException( "socket failed" );
+        throw Exception( "socket failed" );
     }
 
     // Normally when you stop a server listening on a given IP address and port, 
@@ -79,7 +81,7 @@ void TCPAcceptor::start()
     {
         freeaddrinfo( addrinfoResult );
         closesocket( listenSocket );
-        throw TCPException( "bind failed" );
+        throw Exception( "bind failed" );
     }
 
     // We can free the addrinfo structure now.
@@ -90,19 +92,20 @@ void TCPAcceptor::start()
     if( iResult == SOCKET_ERROR )
     {
         closesocket( listenSocket );
-        throw TCPException( "listen failed" );
+        throw Exception( "listen failed" );
     }
 
     listening = true;
 }
 
 
-TCPStream *TCPAcceptor::accept()
+Stream *
+Acceptor::accept()
 {
     // We have to be listening in order to accept a socket.
     if( !listening )
     {
-        return NULL;
+        throw Exception( "not listening" );
     }
 
     // sockaddr_in structure to receive address information of the client.
@@ -114,7 +117,7 @@ TCPStream *TCPAcceptor::accept()
     SOCKET acceptSocket = ::accept( listenSocket, (struct sockaddr *) &address, &len );
     if( acceptSocket == INVALID_SOCKET )
     {
-        throw TCPException( "accept failed" );
+        throw Exception( "accept failed" );
     }
 
     // Extract ascii string representation of the sockaddr_in structure.
@@ -126,6 +129,6 @@ TCPStream *TCPAcceptor::accept()
         sizeof( ip4String ) - 1                     // size of the string buffer
     );
 
-    // Return new TCPStream.
-    return new TCPStream( acceptSocket, string( ip4String ), address.sin_port );
+    // Return new TCP Stream.
+    return new Stream( acceptSocket, string( ip4String ), address.sin_port );
 }

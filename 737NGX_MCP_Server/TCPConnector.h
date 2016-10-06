@@ -1,12 +1,18 @@
 #pragma once
 
+
 #include "TCPStream.h"
+
+
+#include <string>
+using namespace std;
+
 
 namespace TCP
 {
-    class TCPConnector
+    class Connector
     {
     public:
-        TCPStream *connect( const string server, uint16_t port );
+        Stream *connect( const string &server, uint16_t port );
     };
 }

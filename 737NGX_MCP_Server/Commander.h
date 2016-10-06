@@ -19,7 +19,7 @@ public:
     bool isListening();
     void addInterpreter( CommandInterpreter *cmdInterpreter );
 
-protected:
+private:
     static void listen( Commander *self );
 
     thread *listeningThread;

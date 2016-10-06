@@ -54,6 +54,7 @@
 #include "TCP.h"
 #include "TCPAcceptor.h"
 #include "TCPStream.h"
+#include "TCPException.h"
 #include <memory>
 #include <thread>
 #include <iostream>
@@ -63,34 +64,60 @@ int __cdecl main( void )
 {
     TCP::init();
 
-    TCP::Acceptor *acceptor = new TCP::Acceptor( "127.0.0.1", 7654 );
+    std::thread commandServer( []() 
+    {
+        TCP::Acceptor commandAcceptor( "127.0.0.1", 7654 );
+        commandAcceptor.start();
 
-    acceptor->start();
+        TCP::Stream *stream = commandAcceptor.accept();
 
-    TCP::Stream *stream = acceptor->accept();
-
-    std::thread readThread( [&] () {
         size_t len;
         char buf[ 256 ];
-        while( len = stream->read( buf, 256 ) > 0 )
+        try 
         {
-            buf[ len ] = '\0';
-            std::cout << "received: " << buf << endl;
+            while( (len = stream->read( buf, sizeof( buf ) )) > 0 )
+            {
+                std::cout << "Command received: " << buf << endl;
+            }
         }
+        catch( TCP::Exception &e )
+        {
+            cout << e.what() << endl;
+        }
+
+        delete stream;
     } );
 
-    std::thread writeThread( [&]() {
-        char *buf = "Spam!";
+    std::thread updateServer( []() 
+    {
+        TCP::Acceptor updateAcceptor( "127.0.0.1", 7655 );
+        updateAcceptor.start();
+
+        TCP::Stream *stream = updateAcceptor.accept();
+
+        char *buf = "This is new Information!";
         size_t len = strlen( buf ) + 1;
-        while( len = stream->write( buf, len ) > 0 );
+        try
+        {
+            while( stream->write( buf, len ) > 0 )
+            {
+                std::this_thread::sleep_for( 2s );
+            }
+        }
+        catch( TCP::Exception &e )
+        {
+            cout << e.what() << endl;
+        }
+
+        delete stream;
     } );
 
-    readThread.join();
-    writeThread.join();
-
-    delete acceptor;
+    commandServer.join();
+    updateServer.join();
 
     TCP::cleanup();
+
+    std::cout << "Done." << endl;
 
     getchar();
 

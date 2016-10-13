@@ -5,7 +5,7 @@
 using namespace TCP;
 
 
-Acceptor::Acceptor( const string &address, uint16_t port )
+Acceptor::Acceptor( const string & address, uint16_t port )
     : listenSocket( INVALID_SOCKET )
     , address( address )
     , port( port )

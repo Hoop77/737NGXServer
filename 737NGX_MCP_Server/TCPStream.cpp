@@ -4,7 +4,7 @@
 using namespace TCP;
 
 
-Stream::Stream( SOCKET socket, const std::string &peerIP, uint16_t peerPort )
+Stream::Stream( SOCKET socket, const std::string & peerIP, uint16_t peerPort )
     : socket( socket )
     , peerIP( peerIP )
     , peerPort( peerPort ) {}

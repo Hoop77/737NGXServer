@@ -30,12 +30,6 @@
     <ClCompile Include="SimConnectEntity.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Commander.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="MCPInterpreter.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="MCPEntity.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -51,6 +45,9 @@
     <ClCompile Include="TCPStream.cpp">
       <Filter>Quelldateien\TCP</Filter>
     </ClCompile>
+    <ClCompile Include="WorkQueue.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PMDG_NGX_SDK.h">
@@ -63,15 +60,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="SimConnect.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Commander.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandInterpreter.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="MCPInterpreter.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="MCPEntity.h">
@@ -91,6 +79,12 @@
     </ClInclude>
     <ClInclude Include="TCPException.h">
       <Filter>Headerdateien\TCP</Filter>
+    </ClInclude>
+    <ClInclude Include="global.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkQueue.h">
+      <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

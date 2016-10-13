@@ -6,12 +6,11 @@
 #include "SimConnect.h"
 #include <windows.h>
 
-using namespace std;
 
 class SimConnectEntity
 {
 public:
-    explicit SimConnectEntity( string name );
+    explicit SimConnectEntity( const std::string & name );
     virtual ~SimConnectEntity();
 
     virtual void setup() = 0;
@@ -19,10 +18,22 @@ public:
     virtual void close() = 0;
 
     void obtainSimConnectHandle( HANDLE simConnect );
-    string getName() const;
+    std::string getName() const;
 
 protected:
-    const string name;
+    const std::string name;
     HANDLE simConnect;
 };
 
+
+class SimConnectEntityException : std::exception
+{
+public:
+    SimConnectEntityException( const char *msg )
+        : msg( msg ) {}
+
+    const char *what() const throw() { return msg; }
+
+private:
+    const char *msg;
+};

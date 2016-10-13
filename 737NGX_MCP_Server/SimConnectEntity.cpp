@@ -1,7 +1,7 @@
 #include "SimConnectEntity.h"
 
 
-SimConnectEntity::SimConnectEntity( const string name )
+SimConnectEntity::SimConnectEntity( const std::string & name )
     : name( name ) {}
 
 
@@ -14,7 +14,7 @@ void SimConnectEntity::obtainSimConnectHandle( HANDLE simConnect )
 }
 
 
-string SimConnectEntity::getName() const
+std::string SimConnectEntity::getName() const
 {
     return name;
 }

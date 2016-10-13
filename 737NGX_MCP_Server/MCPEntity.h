@@ -4,7 +4,6 @@
 #include "SimConnectEntity.h"
 #include "SimConnect.h"
 #include "PMDG_NGX_SDK.h"
-#include "MCPInterpreter.h"
 
 
 #include <iostream>
@@ -16,9 +15,7 @@ using namespace std;
 class MCPEntity : public SimConnectEntity
 {
 public:
-    friend class MCPInterpreter;
-
-    explicit MCPEntity( string name );
+    explicit MCPEntity( const std::string & name );
     virtual ~MCPEntity();
 
     void setup();

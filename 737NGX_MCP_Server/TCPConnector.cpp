@@ -6,7 +6,7 @@ using namespace TCP;
 
 
 Stream *
-Connector::connect( const string &server, uint16_t port )
+Connector::connect( const string & server, uint16_t port )
 {
     int iResult;
     SOCKET connectSocket;
@@ -66,17 +66,16 @@ Connector::connect( const string &server, uint16_t port )
         break;
     }
 
+    // Throw addressinfo data away.
+    freeaddrinfo( addrinfoResult );
+
     if( connectSocket == INVALID_SOCKET )
     {
-        freeaddrinfo( addrinfoResult );
         throw Exception( "unable to connect to server" );
     }
 
     // Create new TCP Stream object.
     Stream *stream = new Stream( connectSocket, server, port );
-
-    // Throw addressinfo data away.
-    freeaddrinfo( addrinfoResult );
 
     return stream;
 }

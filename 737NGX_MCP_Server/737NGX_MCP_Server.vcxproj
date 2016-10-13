@@ -147,22 +147,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Commander.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MCPEntity.cpp" />
-    <ClCompile Include="MCPInterpreter.cpp" />
     <ClCompile Include="SimConnectClient.cpp" />
     <ClCompile Include="SimConnectEntity.cpp" />
     <ClCompile Include="TCP.cpp" />
     <ClCompile Include="TCPAcceptor.cpp" />
     <ClCompile Include="TCPConnector.cpp" />
     <ClCompile Include="TCPStream.cpp" />
+    <ClCompile Include="WorkQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Commander.h" />
-    <ClInclude Include="CommandInterpreter.h" />
+    <ClInclude Include="global.h" />
     <ClInclude Include="MCPEntity.h" />
-    <ClInclude Include="MCPInterpreter.h" />
     <ClInclude Include="PMDG_NGX_SDK.h" />
     <ClInclude Include="SimConnect.h" />
     <ClInclude Include="SimConnectClient.h" />
@@ -172,6 +169,7 @@
     <ClInclude Include="TCPConnector.h" />
     <ClInclude Include="TCPException.h" />
     <ClInclude Include="TCPStream.h" />
+    <ClInclude Include="WorkQueue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

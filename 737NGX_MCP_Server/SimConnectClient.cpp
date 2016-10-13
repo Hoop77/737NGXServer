@@ -1,6 +1,9 @@
 #include "SimConnectClient.h"
 
 
+using namespace std;
+
+
 SimConnectClient::SimConnectClient()
     : quit( false ) {}
 
@@ -16,12 +19,12 @@ void SimConnectClient::addEntity( SimConnectEntity *entity )
 
 void SimConnectClient::connect()
 {
-    const string errorMsg = "Unable to connect to SimConnect!";
-
     // open simconnect
     HRESULT result = SimConnect_Open( &simConnect, "737NGX Server", NULL, 0, 0, 0 );
-
-    if( result == E_FAIL ) throw errorMsg;
+    if( result == E_FAIL )
+    {
+        throw SimConnectClientException( "Unable to connect to SimConnect!" );
+    }
 
     // setup entities
     for( auto entity : entities )
@@ -31,14 +34,15 @@ void SimConnectClient::connect()
         {
             entity->setup();
         }
-        catch( const string & msg )
+        catch( const SimConnectEntityException & e )
         {
-            cout << "Failed to setup '" << entity->getName() << "'" << " with message: '" << msg << "'" << endl;
-            throw "Failed to connect to Flight Simulator!";
+            SimConnect_Close( simConnect );
+            std::cout << "Failed to setup '" << entity->getName() << "'" << " with message: '" << e.what() << "'" << std::endl;
+            throw SimConnectClientException( "Failed to connect to Flight Simulator!" );
         }
     }
 
-    cout << "Connected to Flight Simulator!\n" << endl;
+    std::cout << "Connected to Flight Simulator!\n" << std::endl;
 }
 
 
@@ -59,7 +63,7 @@ void SimConnectClient::run()
     }
 
     SimConnect_Close( simConnect );
-    cout << "Disconnected from Flight Simulator." << endl;
+    std::cout << "Disconnected from Flight Simulator." << std::endl;
 }
 
 

@@ -30,7 +30,7 @@ namespace TCP
         uint16_t getPeerPort() const;
 
     private:
-        explicit Stream( SOCKET socket, const std::string &peerIP, uint16_t peerPort );
+        explicit Stream( SOCKET socket, const std::string & peerIP, uint16_t peerPort );
         
         SOCKET socket;
         const std::string peerIP;

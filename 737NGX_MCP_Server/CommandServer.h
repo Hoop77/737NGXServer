@@ -25,17 +25,17 @@ namespace CommandHandling
 
         void print( const std::string & msg );
 
-        void performSetMethod( const Protocol::Packet & packet );
-        Protocol::Packet performGetMethod( const Protocol::Packet & packet );
+        void performSetMethod( Protocol::Packet && packet );
+        Protocol::Packet performGetMethod( Protocol::Packet && packet );
 
         Utils::WorkQueue<std::unique_ptr<TCP::Stream>> *getStreamQueue() const { return streamQueue.get(); }
 
     private:
         std::unique_ptr<Utils::WorkQueue<std::unique_ptr<TCP::Stream>>> streamQueue;
         std::vector<std::unique_ptr<ConnectionHandler>> connectionHandlers;
-        const size_t connectionHandlerCount;
-        const std::string ip;
-        const uint16_t port;
+        size_t connectionHandlerCount;
+        std::string ip;
+        uint16_t port;
         std::mutex printMutex;
     };
 }

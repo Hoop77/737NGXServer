@@ -1,11 +1,3 @@
-﻿  TCPStream.cpp
-  CommandConnectionHandler.cpp
-f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\commandconnectionhandler.cpp(75): warning C4101: "e": Unreferenzierte lokale Variable
-f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\commandconnectionhandler.cpp(79): warning C4101: "e": Unreferenzierte lokale Variable
-  Code wird generiert...
-  Überspringen... (keine relevanten Änderungen gefunden)
-  TCPConnector.cpp
-  TCPAcceptor.cpp
-  CommandServer.cpp
+﻿  MCPMediator.cpp
   737NGX_MCP_Server.vcxproj -> F:\Dokumente\Visual Studio 2015\Projects\737NGX_Server\Debug\737NGX_MCP_Server.exe
   737NGX_MCP_Server.vcxproj -> F:\Dokumente\Visual Studio 2015\Projects\737NGX_Server\Debug\737NGX_MCP_Server.pdb (Full PDB)

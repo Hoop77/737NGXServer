@@ -45,17 +45,17 @@ namespace Protocol
 
         enum BytePosition
         {
-            METHOD = 0,
-            ENTITY_ID = 1,
-            VALUE_ID_HIGH = 2,
-            VALUE_ID_LOW = 3,
-            VALUE_DATA = 4
+            METHOD,
+            ENTITY_ID,
+            VALUE_ID_HIGH,
+            VALUE_ID_LOW,
+            VALUE_DATA
         };
 
         enum Method
         {
-            SET = 0,
-            GET = 1
+            SET,
+            GET
         };
 
         // public constructor (throwing)
@@ -113,7 +113,7 @@ namespace Protocol
         Packet( const Packet & other )
             : size( other.size )
         {
-            if( other.size == 0 )
+            if( size == 0 )
             {
                 data = nullptr;
             }

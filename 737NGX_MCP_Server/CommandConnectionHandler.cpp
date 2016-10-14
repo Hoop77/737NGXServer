@@ -40,9 +40,8 @@ void ConnectionHandler::run()
 
             try
             {
-                // Remove a stream from the queue (max wait time: 1s).
-                auto stream = std::move(
-                    streamQueue->dequeue( std::chrono::seconds( 1 ) ) );
+                // Remove a stream from the queue with timout 1s.
+                auto stream = std::move( streamQueue->dequeue( 1000 ) );
 
                 try
                 {
@@ -60,12 +59,12 @@ void ConnectionHandler::run()
                     // Let the server either perform a SET or GET method according to the received packet.
                     if( method == Protocol::Packet::Method::SET )
                     {
-                        server->performSetMethod( commandPacket );
+                        server->performSetMethod( std::move( commandPacket ) );
                     }
                     else if( method == Protocol::Packet::Method::GET )
                     {
                         // The server will return a new packet to send to the client.
-                        Protocol::Packet sendPacket = server->performGetMethod( commandPacket );
+                        Protocol::Packet sendPacket = server->performGetMethod( std::move( commandPacket ) );
                         len = stream->write( sendPacket.getData(), sendPacket.getSize() );
                         if( len == 0 )
                         {

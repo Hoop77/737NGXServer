@@ -44,15 +44,17 @@ namespace Utils
             notEmptyCondition.notify_one();
         }
 
-        T & dequeue( const std::chrono::duration & maxWaitTime )
+        T & dequeue( int timeoutMilliseconds )  // throws Utils::TimoutException
         {
+            std::chrono::milliseconds timeout( timeoutMilliseconds );
             std::unique_lock<std::mutex> lock( queueMutex );
 
             while( theQueue.empty() )
             {
-                bool finishedWaiting = notEmptyCondition.wait_for( lock, maxWaiTime );
-                if( !finishedWaiting )
-                    throw TimeoutException;
+                // Check for timout.
+                std::cv_status status = notEmptyCondition.wait_for( lock, timeout );
+                if( status == std::cv_status::timeout )
+                    throw TimeoutException();
             }
 
             T & item = theQueue.front();

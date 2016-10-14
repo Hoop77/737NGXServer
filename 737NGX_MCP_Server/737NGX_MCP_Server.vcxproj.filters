@@ -40,6 +40,12 @@
     <Filter Include="Quelldateien\Protocol">
       <UniqueIdentifier>{d14d8f24-2169-4368-8a6a-004411d0d4d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\EntityMediators">
+      <UniqueIdentifier>{90ecace0-5d36-4aef-b146-b1b9afc134c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\EntityMediators">
+      <UniqueIdentifier>{91832853-2605-4b9c-95c2-5401783c35b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -74,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="packet.cpp">
       <Filter>Quelldateien\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="MCPMediator.cpp">
+      <Filter>Quelldateien\EntityMediators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +133,12 @@
     </ClInclude>
     <ClInclude Include="Exceptions.h">
       <Filter>Headerdateien\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Mediator.h">
+      <Filter>Headerdateien\EntityMediators</Filter>
+    </ClInclude>
+    <ClInclude Include="MCPMediator.h">
+      <Filter>Headerdateien\EntityMediators</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

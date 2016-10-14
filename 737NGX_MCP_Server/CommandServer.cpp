@@ -75,13 +75,13 @@ void Server::print( const std::string & msg )
 }
 
 
-void Server::performSetMethod( const Protocol::Packet & packet )
+void Server::performSetMethod( Protocol::Packet && packet )
 {
 
 }
 
 
-Protocol::Packet Server::performGetMethod( const Protocol::Packet & packet )
+Protocol::Packet Server::performGetMethod( Protocol::Packet && packet )
 {
     return packet;
 }

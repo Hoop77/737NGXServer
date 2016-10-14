@@ -19,18 +19,30 @@
     <Filter Include="Quelldateien\TCP">
       <UniqueIdentifier>{8aae85e0-2997-43fa-84f4-6f1a9a362503}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\SimConnect">
+      <UniqueIdentifier>{21515d90-956f-4b91-aac8-a9a53bd0b38c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\SimConnect">
+      <UniqueIdentifier>{587fb0ed-b2ed-4676-91e4-3581dfa28305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\CommandHandling">
+      <UniqueIdentifier>{cb0fe5dd-a66b-40ff-916e-3b6e84ae524f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\CommandHandling">
+      <UniqueIdentifier>{cc37330f-0e49-4933-931c-a870f8b00e55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Utils">
+      <UniqueIdentifier>{03ebd704-e34b-4f39-8bab-d5b9876167cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Protocol">
+      <UniqueIdentifier>{87881707-b755-4b96-8b27-15b1a72dee35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Protocol">
+      <UniqueIdentifier>{d14d8f24-2169-4368-8a6a-004411d0d4d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="SimConnectClient.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="SimConnectEntity.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="MCPEntity.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="TCP.cpp">
@@ -45,24 +57,27 @@
     <ClCompile Include="TCPStream.cpp">
       <Filter>Quelldateien\TCP</Filter>
     </ClCompile>
-    <ClCompile Include="WorkQueue.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="SimConnectClient.cpp">
+      <Filter>Quelldateien\SimConnect</Filter>
+    </ClCompile>
+    <ClCompile Include="SimConnectEntity.cpp">
+      <Filter>Quelldateien\SimConnect</Filter>
+    </ClCompile>
+    <ClCompile Include="MCPEntity.cpp">
+      <Filter>Quelldateien\SimConnect</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandConnectionHandler.cpp">
+      <Filter>Quelldateien\CommandHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandServer.cpp">
+      <Filter>Quelldateien\CommandHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="packet.cpp">
+      <Filter>Quelldateien\Protocol</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PMDG_NGX_SDK.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="SimConnectClient.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="SimConnectEntity.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="SimConnect.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="MCPEntity.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="TCP.h">
@@ -80,11 +95,35 @@
     <ClInclude Include="TCPException.h">
       <Filter>Headerdateien\TCP</Filter>
     </ClInclude>
+    <ClInclude Include="SimConnectClient.h">
+      <Filter>Headerdateien\SimConnect</Filter>
+    </ClInclude>
+    <ClInclude Include="SimConnectEntity.h">
+      <Filter>Headerdateien\SimConnect</Filter>
+    </ClInclude>
+    <ClInclude Include="SimConnect.h">
+      <Filter>Headerdateien\SimConnect</Filter>
+    </ClInclude>
+    <ClInclude Include="MCPEntity.h">
+      <Filter>Headerdateien\SimConnect</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandConnectionHandler.h">
+      <Filter>Headerdateien\CommandHandling</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandServer.h">
+      <Filter>Headerdateien\CommandHandling</Filter>
+    </ClInclude>
     <ClInclude Include="global.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="WorkQueue.h">
-      <Filter>Headerdateien</Filter>
+      <Filter>Headerdateien\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet.h">
+      <Filter>Headerdateien\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="Exceptions.h">
+      <Filter>Headerdateien\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

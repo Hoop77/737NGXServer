@@ -1,39 +1,51 @@
 #pragma once
 
-#include <iostream>
 #include <string>
+#include <vector>
 
 #include "SimConnect.h"
 #include <windows.h>
+#include <memory>
+
+#include "global.h"
 
 
-class SimConnectEntity
+namespace SimConnect
 {
-public:
-    explicit SimConnectEntity( const std::string & name );
-    virtual ~SimConnectEntity();
+    // GoF Observer Pattern (Push Update Notification)
+    class EntityDataListener
+    {
+    public:
+        virtual ~EntityDataListener() {}
 
-    virtual void setup() = 0;
-    virtual void dispatch( SIMCONNECT_RECV *data, DWORD size, void *context ) = 0;
-    virtual void close() = 0;
+        virtual void OnDataChanged( valueId_t valueId, value32_t valueData ) = 0;
 
-    void obtainSimConnectHandle( HANDLE simConnect );
-    std::string getName() const;
+    protected:
+        explicit EntityDataListener() {}
+    };
 
-protected:
-    const std::string name;
-    HANDLE simConnect;
-};
+    class Entity
+    {
+    public:
+        virtual ~Entity();
 
+        virtual void setup() = 0;
+        virtual void dispatch( SIMCONNECT_RECV *data, DWORD size, void *context ) = 0;
+        virtual void close() = 0;
 
-class SimConnectEntityException : std::exception
-{
-public:
-    SimConnectEntityException( const char *msg )
-        : msg( msg ) {}
+        void obtainSimConnectHandle( HANDLE simConnect );
+        std::string getName() const;
 
-    const char *what() const throw() { return msg; }
+        void registerDataListener( std::shared_ptr<EntityDataListener> listener );
+        void deregisterDataListener( std::shared_ptr<EntityDataListener> listener );
 
-private:
-    const char *msg;
-};
+    protected:
+        explicit Entity( const std::string & name );
+
+        void notifyDataListeners( valueId_t valueId, value32_t valueData );
+
+        const std::string name;
+        HANDLE simConnect;
+        std::vector<std::shared_ptr<EntityDataListener>> dataListeners;
+    };
+}

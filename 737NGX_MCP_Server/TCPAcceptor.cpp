@@ -5,7 +5,7 @@
 using namespace TCP;
 
 
-Acceptor::Acceptor( const string & address, uint16_t port )
+Acceptor::Acceptor( const std::string & address, uint16_t port )
     : listenSocket( INVALID_SOCKET )
     , address( address )
     , port( port )
@@ -99,7 +99,7 @@ Acceptor::start()
 }
 
 
-Stream *
+std::unique_ptr<Stream>
 Acceptor::accept()
 {
     // We have to be listening in order to accept a socket.
@@ -130,5 +130,6 @@ Acceptor::accept()
     );
 
     // Return new TCP Stream.
-    return new Stream( acceptSocket, string( ip4String ), address.sin_port );
+    return std::unique_ptr<Stream>(
+        new Stream( acceptSocket, std::string( ip4String ), address.sin_port ) );
 }

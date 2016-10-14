@@ -5,40 +5,44 @@
 #include <vector>
 #include <thread>
 #include <exception>
+#include <memory>
 
 #include <Windows.h>
 #include "SimConnect.h"
 #include "SimConnectEntity.h"
 
 
-class SimConnectClient
+namespace SimConnect
 {
-public:
-    explicit SimConnectClient();
-    virtual ~SimConnectClient();
+    class Client
+    {
+    public:
+        explicit Client();
+        virtual ~Client();
 
-    void connect();
-    void run();
+        void connect();
+        void run();
 
-    void addEntity( SimConnectEntity *entity );
+        void addEntity( std::shared_ptr<Entity> entity );
 
-private:
-    static void CALLBACK dispatch( SIMCONNECT_RECV* data, DWORD size, void *context );
+    private:
+        static void CALLBACK dispatch( SIMCONNECT_RECV* data, DWORD size, void *context );
 
-    HANDLE simConnect;
-    std::vector<SimConnectEntity *> entities;
-    bool quit;
-};
+        HANDLE simConnect;
+        std::vector<std::shared_ptr<Entity>> entities;
+        bool quit;
+    };
 
 
-class SimConnectClientException : std::exception
-{
-public:
-    SimConnectClientException( const char *msg )
-        : msg( msg ) {}
+    class Exception : std::exception
+    {
+    public:
+        Exception( const char *msg )
+            : msg( msg ) {}
 
-    const char *what() const throw() { return msg; }
+        const char *what() const throw() { return msg; }
 
-private:
-    const char *msg;
-};
+    private:
+        const char *msg;
+    };
+}

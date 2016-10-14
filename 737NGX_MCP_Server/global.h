@@ -4,7 +4,7 @@
 #include "stdint.h"
 
 
-union val32
+union value32_t
 {
     float f;
     bool b;
@@ -17,3 +17,7 @@ union val32
     int16_t i16[ 2 ];
     int32_t i32;
 };
+
+
+typedef uint8_t entityId_t;
+typedef uint16_t valueId_t;

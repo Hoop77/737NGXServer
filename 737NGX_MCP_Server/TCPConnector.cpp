@@ -5,8 +5,8 @@
 using namespace TCP;
 
 
-Stream *
-Connector::connect( const string & server, uint16_t port )
+std::unique_ptr<Stream>
+Connector::connect( const std::string & server, uint16_t port )
 {
     int iResult;
     SOCKET connectSocket;
@@ -75,7 +75,6 @@ Connector::connect( const string & server, uint16_t port )
     }
 
     // Create new TCP Stream object.
-    Stream *stream = new Stream( connectSocket, server, port );
-
-    return stream;
+    return std::unique_ptr<Stream>(
+        new Stream( connectSocket, server, port ) );
 }

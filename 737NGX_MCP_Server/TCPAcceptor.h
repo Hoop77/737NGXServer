@@ -6,7 +6,7 @@
 
 
 #include <string>
-using namespace std;
+#include <memory>
 
 
 namespace TCP
@@ -14,7 +14,7 @@ namespace TCP
     class Acceptor
     {
     public:
-        explicit Acceptor( const string & address, uint16_t port );
+        explicit Acceptor( const std::string & address, uint16_t port );
         virtual ~Acceptor();
 
         // Copy protection since destructor closes the listening socket.
@@ -22,11 +22,11 @@ namespace TCP
         Acceptor & operator=( const Acceptor & other ) = delete;
 
         void start();
-        Stream *accept();
+        std::unique_ptr<Stream> accept();
 
     private:
         SOCKET listenSocket;
-        const string address;
+        std::string address;
         uint16_t port;
         bool listening;
     };

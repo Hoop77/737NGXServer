@@ -15,16 +15,17 @@ namespace TCP
         friend class Connector;
 
     public:
-        // No public constructor because a Stream can only be created by Acceptors and Connectors.
-
         virtual ~Stream();
 
-        // Copy protection since destructor closes the socket.
-        Stream( const Stream &other ) = delete;
-        Stream &operator=( const Stream &other ) = delete;
+        // We don't want any copy or move construction/assignment since it's the factories' job to create a stream object.
+        Stream( const Stream & other ) = delete;
+        Stream & operator=( const Stream & other ) = delete;
+        Stream( Stream && other ) = delete;
+        Stream & operator=( Stream && other ) = delete;
 
         size_t write( const char *buffer, size_t len );
         size_t read( char *buffer, size_t len );
+        void close();
 
         std::string getPeerIP() const;
         uint16_t getPeerPort() const;
@@ -33,8 +34,8 @@ namespace TCP
         explicit Stream( SOCKET socket, const std::string & peerIP, uint16_t peerPort );
         
         SOCKET socket;
-        const std::string peerIP;
-        const uint16_t peerPort;
+        std::string peerIP;
+        uint16_t peerPort;
     };
 }
 

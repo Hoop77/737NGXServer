@@ -1,20 +1,51 @@
 #include "SimConnectEntity.h"
+using namespace SimConnect;
+
+#include <algorithm>
 
 
-SimConnectEntity::SimConnectEntity( const std::string & name )
+Entity::Entity( const std::string & name )
     : name( name ) {}
 
 
-SimConnectEntity::~SimConnectEntity() {}
+Entity::~Entity() {}
 
 
-void SimConnectEntity::obtainSimConnectHandle( HANDLE simConnect )
+void Entity::obtainSimConnectHandle( HANDLE simConnect )
 {
     this->simConnect = simConnect;
 }
 
 
-std::string SimConnectEntity::getName() const
+std::string Entity::getName() const
 {
     return name;
+}
+
+
+void Entity::registerDataListener( std::shared_ptr<EntityDataListener> listener )
+{
+    dataListeners.push_back( listener );
+}
+
+
+void Entity::deregisterDataListener( std::shared_ptr<EntityDataListener> listener )
+{
+    auto pos = std::find_if( dataListeners.begin(), dataListeners.end(), 
+        [&]( std::shared_ptr<EntityDataListener> const & l )
+    {
+        return l.get() == listener.get();
+    } );
+
+    if( pos != dataListeners.end() ) 
+        dataListeners.erase( pos );
+}
+
+
+void Entity::notifyDataListeners( valueId_t valueId, value32_t valueData )
+{
+    for( auto & listener : dataListeners )
+    {
+        listener->OnDataChanged( valueId, valueData );
+    }
 }

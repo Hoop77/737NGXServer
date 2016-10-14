@@ -5,7 +5,7 @@
 
 
 #include <string>
-using namespace std;
+#include <memory>
 
 
 namespace TCP
@@ -13,6 +13,6 @@ namespace TCP
     class Connector
     {
     public:
-        Stream *connect( const string & server, uint16_t port );
+        std::unique_ptr<Stream> connect( const std::string & server, uint16_t port );
     };
 }

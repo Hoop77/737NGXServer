@@ -12,11 +12,13 @@ Stream::Stream( SOCKET socket, const std::string & peerIP, uint16_t peerPort )
 
 Stream::~Stream()
 {
-    closesocket( socket );
+    // Omit exception handling here.
+    if( socket != INVALID_SOCKET )
+        closesocket( socket );
 }
 
 
-size_t
+size_t 
 Stream::write( const char *buffer, size_t len )
 {
     int result = ::send( socket, buffer, (int) len, 0 );
@@ -40,7 +42,18 @@ Stream::read( char *buffer, size_t len )
 }
 
 
-std::string
+void 
+Stream::close()
+{
+    int result = ::closesocket( socket );
+    if( result != 0 )
+        throw Exception( "closesocket failed" );
+
+    socket = INVALID_SOCKET;
+}
+
+
+std::string 
 Stream::getPeerIP() const
 {
     return peerIP;

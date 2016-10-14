@@ -1,32 +1,19 @@
 #include <iostream>
 #include <string>
+#include <memory>
 
 #include "SimConnectClient.h"
 #include "MCPEntity.h"
 
 
-using namespace std;
-
 int main( int argc, char *argv[] )
 {
-	SimConnectClient simConnectClient;
+	SimConnect::Client simConnectClient;
 
-	MCPEntity *mcpEntity = new MCPEntity( "Multi Control Panel Module" );
+	std::shared_ptr<SimConnect::MCPEntity> mcpEntity( new SimConnect::MCPEntity( "Multi Control Panel Module" ) );
 	simConnectClient.addEntity( mcpEntity );
 
-	// connect to and run simconnect
-	try
-	{
-        simConnectClient.connect();
-		simConnectClient.run();
-	}
-	catch( const string &msg )
-	{
-		cout << msg << endl;
-	}
-
-	cin.get();
-	
+	std::cin.get();
 	return 0;
 }
 

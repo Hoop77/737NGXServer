@@ -37,12 +37,12 @@ void Entity::deregisterDataListener( std::shared_ptr<EntityDataListener> listene
         return l.get() == listener.get();
     } );
 
-    if( pos != dataListeners.end() ) 
+    if( pos != dataListeners.end() )
         dataListeners.erase( pos );
 }
 
 
-void Entity::notifyDataListeners( valueId_t valueId, value32_t valueData )
+void Entity::notifyDataListeners( Global::ValueId::Type valueId, uint32_t valueData )
 {
     for( auto & listener : dataListeners )
     {

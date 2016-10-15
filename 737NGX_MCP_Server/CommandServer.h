@@ -23,7 +23,7 @@ namespace CommandHandling
         void run();
         void stop();
 
-        void print( const std::string & msg );
+        void message( const std::string & msg );
 
         void performSetMethod( Protocol::Packet && packet );
         Protocol::Packet performGetMethod( Protocol::Packet && packet );

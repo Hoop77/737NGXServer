@@ -151,8 +151,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MCPEntity.cpp" />
     <ClCompile Include="CommandServer.cpp" />
-    <ClCompile Include="MCPMediator.cpp" />
-    <ClCompile Include="packet.cpp" />
+    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="SimConnectClient.cpp" />
     <ClCompile Include="SimConnectEntity.cpp" />
     <ClCompile Include="TCP.cpp" />
@@ -162,14 +161,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandConnectionHandler.h" />
-    <ClInclude Include="MCPMediator.h" />
-    <ClInclude Include="Mediator.h" />
     <ClInclude Include="Exceptions.h" />
-    <ClInclude Include="global.h" />
+    <ClInclude Include="Global.h" />
     <ClInclude Include="MCPEntity.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="PMDG_NGX_SDK.h" />
     <ClInclude Include="CommandServer.h" />
+    <ClInclude Include="Protocol.h" />
     <ClInclude Include="SimConnect.h" />
     <ClInclude Include="SimConnectClient.h" />
     <ClInclude Include="SimConnectEntity.h" />

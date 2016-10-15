@@ -22,6 +22,8 @@ ConnectionHandler::~ConnectionHandler()
 
 void ConnectionHandler::run()
 {
+    using namespace Protocol;
+
     if( running )
         return;
 
@@ -31,7 +33,7 @@ void ConnectionHandler::run()
         // Get the queue from the server which we will permanently try to
         // extract streams from to receive new packets.
         auto streamQueue = server->getStreamQueue();
-        char *packetBuffer = new char[ Protocol::Packet::MAX_SIZE ];
+        char packetBuffer[ Packet::MAX_SIZE ];
 
         while( 1 )
         {
@@ -46,29 +48,29 @@ void ConnectionHandler::run()
                 try
                 {
                     // Receive incoming command data.
-                    size_t len = stream->read( packetBuffer, Protocol::Packet::MAX_SIZE );
+                    size_t len = stream->read( packetBuffer, Packet::MAX_SIZE );
                     if( len == 0 )
                     {
-                        server->print( std::string( stream->getPeerIP() ).append( " has closed unexpectedly." ) );
+                        server->message( std::string( stream->getPeerIP() ).append( " has closed unexpectedly." ) );
                         break;
                     }
 
                     // Create packet from the received data.
-                    Protocol::Packet commandPacket( packetBuffer, len );
-                    Protocol::Packet::Method method = commandPacket.getMethod();
+                    Packet commandPacket( packetBuffer, len );
+                    Method::Type method = commandPacket.getMethod();
                     // Let the server either perform a SET or GET method according to the received packet.
-                    if( method == Protocol::Packet::Method::SET )
+                    if( method == Method::SET )
                     {
                         server->performSetMethod( std::move( commandPacket ) );
                     }
-                    else if( method == Protocol::Packet::Method::GET )
+                    else if( method == Method::GET )
                     {
                         // The server will return a new packet to send to the client.
-                        Protocol::Packet sendPacket = server->performGetMethod( std::move( commandPacket ) );
+                        Packet sendPacket = server->performGetMethod( std::move( commandPacket ) );
                         len = stream->write( sendPacket.getData(), sendPacket.getSize() );
                         if( len == 0 )
                         {
-                            server->print( std::string( stream->getPeerIP() ).append( " has closed unexpectedly." ) );
+                            server->message( std::string( stream->getPeerIP() ).append( " has closed unexpectedly." ) );
                         }
                     }
 
@@ -76,11 +78,11 @@ void ConnectionHandler::run()
                 }
                 catch( TCP::Exception & e )
                 {
-                    server->print( std::string( "Connection Error from: " ).append( stream->getPeerIP() ) );
+                    server->message( std::string( "Connection Error from: " ).append( stream->getPeerIP() ) );
                 }
-                catch( Protocol::PacketException & e )
+                catch( PacketException & e )
                 {
-                    server->print( std::string( "Invalid Packet from: " ).append( stream->getPeerIP() ) );
+                    server->message( std::string( "Invalid Packet from: " ).append( stream->getPeerIP() ) );
                 }
             }
             catch( Utils::TimeoutException & e )

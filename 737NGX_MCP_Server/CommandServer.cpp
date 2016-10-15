@@ -53,7 +53,7 @@ void Server::run()
     }
     catch( TCP::Exception & e )
     {
-        print( std::string( "TCP Error: " ).append( e.what() ) );
+        message( std::string( "TCP Error: " ).append( e.what() ) );
     }
 }
 
@@ -68,7 +68,7 @@ void Server::stop()
 }
 
 
-void Server::print( const std::string & msg )
+void Server::message( const std::string & msg )
 {
     std::lock_guard<std::mutex> lock( printMutex );
     std::cout << msg << std::endl;

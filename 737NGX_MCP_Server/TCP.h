@@ -8,6 +8,6 @@
 
 namespace TCP
 {
-    void init();
-    void cleanup();
+	void init();
+	void cleanup();
 }

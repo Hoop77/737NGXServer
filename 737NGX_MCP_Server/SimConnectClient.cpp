@@ -3,7 +3,7 @@ using namespace SimConnect;
 
 
 Client::Client()
-    : quit( false ) {}
+	: quit( false ) {}
 
 
 Client::~Client() {}
@@ -11,74 +11,74 @@ Client::~Client() {}
 
 void Client::addEntity( std::shared_ptr<Entity> entity )
 {
-    entities.push_back( entity );
+	entities.push_back( entity );
 }
 
 
 void Client::connect()
 {
-    // open simconnect
-    HRESULT result = SimConnect_Open( &simConnect, "737NGX Server", NULL, 0, 0, 0 );
-    if( result == E_FAIL )
-    {
-        throw Exception( "Unable to connect to SimConnect!" );
-    }
+	// open simconnect
+	HRESULT result = SimConnect_Open( &simConnect, "737NGX Server", NULL, 0, 0, 0 );
+	if( result == E_FAIL )
+	{
+		throw Exception( "Unable to connect to SimConnect!" );
+	}
 
-    // setup entities
-    for( auto & entity : entities )
-    {
-        entity->obtainSimConnectHandle( simConnect );
-        try
-        {
-            entity->setup();
-        }
-        catch( const Exception & e )
-        {
-            SimConnect_Close( simConnect );
-            std::cout << "Failed to setup '" << entity->getName() << "'" << " with message: '" << e.what() << "'" << std::endl;
-            throw Exception( "Failed to connect to Flight Simulator!" );
-        }
-    }
+	// setup entities
+	for( auto & entity : entities )
+	{
+		entity->obtainSimConnectHandle( simConnect );
+		try
+		{
+			entity->setup();
+		}
+		catch( const Exception & e )
+		{
+			SimConnect_Close( simConnect );
+			std::cout << "Failed to setup '" << entity->getName() << "'" << " with message: '" << e.what() << "'" << std::endl;
+			throw Exception( "Failed to connect to Flight Simulator!" );
+		}
+	}
 
-    std::cout << "Connected to Flight Simulator!\n" << std::endl;
+	std::cout << "Connected to Flight Simulator!\n" << std::endl;
 }
 
 
 void Client::run()
 {
-    // main loop
-    while( !quit )
-    {
-        SimConnect_CallDispatch( simConnect, &Client::dispatch, this );
+	// main loop
+	while( !quit )
+	{
+		SimConnect_CallDispatch( simConnect, &Client::dispatch, this );
 
-        Sleep( 1 );
-    }
+		Sleep( 1 );
+	}
 
-    // close entities
-    for( auto & entity : entities )
-    {
-        entity->close();
-    }
+	// close entities
+	for( auto & entity : entities )
+	{
+		entity->close();
+	}
 
-    SimConnect_Close( simConnect );
-    std::cout << "Disconnected from Flight Simulator." << std::endl;
+	SimConnect_Close( simConnect );
+	std::cout << "Disconnected from Flight Simulator." << std::endl;
 }
 
 
 void CALLBACK Client::dispatch( SIMCONNECT_RECV *data, DWORD size, void *context )
 {
-    Client *self = static_cast<Client *>(context);
+	Client *self = static_cast<Client *>(context);
 
-    if( data->dwID == SIMCONNECT_RECV_ID_QUIT )
-    {
-        self->quit = true;
-    }
-    else
-    {
-        // call each entity's dispatch routine
-        for( auto & entity : self->entities )
-        {
-            entity->dispatch( data, size, context );
-        }
-    }
+	if( data->dwID == SIMCONNECT_RECV_ID_QUIT )
+	{
+		self->quit = true;
+	}
+	else
+	{
+		// call each entity's dispatch routine
+		for( auto & entity : self->entities )
+		{
+			entity->dispatch( data, size, context );
+		}
+	}
 }

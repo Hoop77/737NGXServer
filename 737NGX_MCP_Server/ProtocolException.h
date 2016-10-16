@@ -4,7 +4,7 @@
 #include <exception>
 
 
-namespace TCP
+namespace Protocol
 {
 	class Exception : public std::exception
 	{

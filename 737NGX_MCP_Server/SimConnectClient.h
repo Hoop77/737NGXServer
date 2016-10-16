@@ -14,35 +14,35 @@
 
 namespace SimConnect
 {
-    class Client
-    {
-    public:
-        explicit Client();
-        virtual ~Client();
+	class Client
+	{
+	public:
+		explicit Client();
+		virtual ~Client();
 
-        void connect();
-        void run();
+		void connect();
+		void run();
 
-        void addEntity( std::shared_ptr<Entity> entity );
+		void addEntity( std::shared_ptr<Entity> entity );
 
-    private:
-        static void CALLBACK dispatch( SIMCONNECT_RECV* data, DWORD size, void *context );
+	private:
+		static void CALLBACK dispatch( SIMCONNECT_RECV* data, DWORD size, void *context );
 
-        HANDLE simConnect;
-        std::vector<std::shared_ptr<Entity>> entities;
-        bool quit;
-    };
+		HANDLE simConnect;
+		std::vector<std::shared_ptr<Entity>> entities;
+		bool quit;
+	};
 
 
-    class Exception : std::exception
-    {
-    public:
-        Exception( const char *msg )
-            : msg( msg ) {}
+	class Exception : std::exception
+	{
+	public:
+		Exception( const char *msg )
+			: msg( msg ) {}
 
-        const char *what() const throw() { return msg; }
+		const char *what() const throw() { return msg; }
 
-    private:
-        const char *msg;
-    };
+	private:
+		const char *msg;
+	};
 }

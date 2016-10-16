@@ -9,50 +9,38 @@
 
 #include <iostream>
 #include <string>
+#include <atomic>
+#include <functional>
 
 
 namespace SimConnect
 {
-    // Multi Control Panel
-    class MCPEntity : public Entity
-    {
-    public:
-        explicit MCPEntity( const std::string & name );
-        virtual ~MCPEntity();
+	// Multi Control Panel
+	class MCPEntity : public Entity
+	{
+	public:
+		explicit MCPEntity( const std::string & name );
 
-        void setup();
-        void dispatch( SIMCONNECT_RECV *data, DWORD size, void *context );
-        void close();
+		void setup();
+		void dispatch( SIMCONNECT_RECV *data, DWORD size, void *context );
+		void close();
 
-    private:
-        enum DataRequestId
-        {
-            DATA_REQUEST,
-            CONTROL_REQUEST,
-            AIR_PATH_REQUEST
-        };
+		void setValueData( Global::ValueId::Type valueId, uint32_t valueData );
+		uint32_t getValueData( Global::ValueId::Type valueId );
+		void setEntireData( const uint32_t *valueData );
+		void getEntireData( uint32_t *valueData );
 
-        enum EventId
-        {
-            EVENT_HEADING_SELECTOR,
-            EVENT_KEYBOARD_A
-        };
+	private:
+		enum DataRequestId
+		{
+			DATA_REQUEST,
+			AIR_PATH_REQUEST
+		};
 
-        enum InputId
-        {
-            INPUT
-        };
+		void setupDataConnection();
+		void setupEvents();
 
-        enum GroupId
-        {
-            GROUP_KEYBOARD
-        };
-
-        void setupDataConnection();
-        void setupControlConnection();
-
-		// Array storing our value data.
-		uint32_t valueData[ Global::ValueId::MCP::VALUE_COUNT ];
-        PMDG_NGX_Control control;
-    };
+		// Atomic array storing our value data.
+		std::atomic<uint32_t> values[ Global::ValueId::MCP::VALUE_COUNT ];
+	};
 }

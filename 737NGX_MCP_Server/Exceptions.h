@@ -3,5 +3,5 @@
 
 namespace Utils
 {
-    class TimeoutException {};
+	class TimeoutException {};
 }

@@ -6,43 +6,31 @@
 
 namespace Protocol
 {
-	class Exception : public std::exception
+	//-----------------------------------
+	// Some definitions for the protocol.
+	//-----------------------------------
+
+	namespace Method
 	{
-	public:
-		Exception( const char *msg )
-			: msg( msg ) {}
+		typedef uint8_t Type;
 
-		const char *what() const throw() { return msg; }
+		constexpr Type GET = 0;
+		constexpr Type SET = 1;
 
-	private:
-		const char *msg;
+		inline bool isValid( Type method )
+		{
+			return method < 2 ? true : false;
+		}
+	}
+
+	namespace BytePosition
+	{
+		typedef int Type;
+
+		constexpr Type METHOD = 0;
+		constexpr Type ENTITY_ID = 1;
+		constexpr Type VALUE_ID_HIGH = 2;
+		constexpr Type VALUE_ID_LOW = 3;
+		constexpr Type VALUE_DATA = 4;
 	};
-
-    //-----------------------------------
-    // Some definitions for the protocol.
-    //-----------------------------------
-
-    namespace Method
-    {
-        typedef uint8_t Type;
-
-        constexpr Type GET = 0;
-        constexpr Type SET = 1;
-
-        inline bool isValid( Type method )
-        {
-            return method < 2 ? true : false;
-        }
-    }
-
-    namespace BytePosition
-    {
-        typedef int Type;
-
-        constexpr Type METHOD = 0;
-        constexpr Type ENTITY_ID = 1;
-        constexpr Type VALUE_ID_HIGH = 2;
-        constexpr Type VALUE_ID_LOW = 3;
-        constexpr Type VALUE_DATA = 4;
-    };
 }

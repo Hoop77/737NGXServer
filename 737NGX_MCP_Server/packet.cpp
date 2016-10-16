@@ -1,4 +1,5 @@
 #include "packet.h"
+#include "ProtocolException.h"
 
 
 namespace Protocol
@@ -90,7 +91,7 @@ Packet::Packet( const Packet & other )
 
 
 // copy assignment operator
-Packet & 
+Packet &
 Packet::operator=( Packet other )
 {
 	swap( *this, other );
@@ -108,7 +109,7 @@ Packet::Packet( Packet && other )
 
 
 // move assignment operator
-Packet & 
+Packet &
 Packet::operator=( Packet && other )
 {
 	if( this != &other )
@@ -126,7 +127,7 @@ Packet::operator=( Packet && other )
 }
 
 
-Method::Type 
+Method::Type
 Packet::getMethod() const
 {
 	return data[ BytePosition::METHOD ];
@@ -155,14 +156,14 @@ Packet::getValueData() const
 
 
 const char *
-Packet::getData() const 
-{ 
-	return data; 
+Packet::getData() const
+{
+	return data;
 }
 
 
-size_t 
-Packet::getSize() const 
-{ 
-	return size; 
+size_t
+Packet::getSize() const
+{
+	return size;
 }

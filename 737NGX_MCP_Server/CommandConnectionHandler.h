@@ -9,21 +9,21 @@
 
 namespace CommandHandling
 {
-    class Server;
+	class Server;
 
-    class ConnectionHandler
-    {
-    public:
-        explicit ConnectionHandler( Server *server );
-        virtual ~ConnectionHandler();
+	class ConnectionHandler
+	{
+	public:
+		explicit ConnectionHandler( Server *server );
+		virtual ~ConnectionHandler();
 
-        void run();
-        void stop();
+		void run();
+		void stop();
 
-    private:
-        Server *server;
-        std::unique_ptr<std::thread> runThread;
-        bool running;
-    };
+	private:
+		Server *server;
+		std::unique_ptr<std::thread> runThread;
+		bool running;
+	};
 }
 

@@ -10,9 +10,9 @@
 
 namespace TCP
 {
-    class Connector
-    {
-    public:
-        std::unique_ptr<Stream> connect( const std::string & server, uint16_t port );
-    };
+	class Connector
+	{
+	public:
+		std::unique_ptr<Stream> connect( const std::string & server, uint16_t port );
+	};
 }

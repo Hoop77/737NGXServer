@@ -128,5 +128,8 @@
     <ClInclude Include="Protocol.h">
       <Filter>Headerdateien\Protocol</Filter>
     </ClInclude>
+    <ClInclude Include="ProtocolException.h">
+      <Filter>Headerdateien\Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

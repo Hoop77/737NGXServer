@@ -49,3 +49,15 @@ void Entity::notifyDataListeners( Global::ValueId::Type valueId, uint32_t valueD
 		listener->OnDataChanged( valueId, valueData );
 	}
 }
+
+
+void SimConnectEntity::mapValueIdToSimEvent( SIMCONNECT_CLIENT_EVENT_ID simConnectEventId, int valueId )
+{
+	// The simconnect event id must be specified as a string starting with '#'.
+	std::string id( std::string( "#" )
+		.append( std::to_string( simConnectEventId ) ) );
+
+	HRESULT result = SimConnect_MapClientEventToSimEvent( simConnect, valueId, id );
+	if( result == E_FAIL ) 
+		throw Exception( "SimConnect_MapClientEventToSimEvent" );
+}

@@ -49,6 +49,9 @@ namespace SimConnect
 
 		void notifyDataListeners( Global::ValueId::Type valueId, uint32_t valueData );
 
+		// helper function
+		void mapValueIdToSimEvent( SIMCONNECT_CLIENT_EVENT_ID simConnectEventId, int valueId );
+
 		const std::string name;
 		HANDLE simConnect;
 		std::vector<std::shared_ptr<EntityDataListener>> dataListeners;

@@ -1,6 +1,7 @@
 #include "CommandConnectionHandler.h"
 #include "CommandServer.h"
 #include "Packet.h"
+#include "PacketFactory.h"
 #include "TCPException.h"
 #include <string>
 
@@ -48,18 +49,20 @@ void ConnectionHandler::run()
 				try
 				{
 					// Receive incoming command data.
-					size_t len = stream->read( packetBuffer, Packet::MAX_SIZE );
-					if( len == 0 )
+					size_t size = stream->read( packetBuffer, Packet::MAX_SIZE );
+					if( size == 0 )
 					{
 						server->message( std::string( stream->getPeerIP() ).append( " has closed unexpectedly." ) );
 						break;
 					}
 
 					// Create packet from the received data.
-					Packet commandPacket( packetBuffer, len );
-					Method::Type method = commandPacket.getMethod();
+					std::unique_ptr<Packet> receivedPacket =
+						PacketFactory::createPacketFromReceivedData( packetBuffer, size );
+
+					int packetType = receivedPacket->getPacketType();
 					// Let the server either perform a SET or GET method according to the received packet.
-					if( method == Method::SET )
+					if( packetType == Packet::PACKET_TYPE_EVENT )
 					{
 						server->performSetMethod( std::move( commandPacket ) );
 					}
@@ -80,7 +83,7 @@ void ConnectionHandler::run()
 				{
 					server->message( std::string( "Connection Error from: " ).append( stream->getPeerIP() ) );
 				}
-				catch( Protocol::Exception & e )
+				catch( PacketException & e )
 				{
 					server->message( std::string( "Invalid Packet from: " ).append( stream->getPeerIP() ) );
 				}

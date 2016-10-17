@@ -66,19 +66,56 @@ void MCPEntity::setupDataConnection()
 
 void MCPEntity::setupEvents()
 {
-	HRESULT result;
+	using namespace Global::ValueId::MCP;
 
-	result = SimConnect_MapClientEventToSimEvent( simConnect, EVENT_HEADING_SELECTOR, "#70022" );
-	if( result == E_FAIL ) throw Exception( "SimConnect_MapClientEventToSimEvent" );
-
-
-	result = SimConnect_MapClientEventToSimEvent( simConnect, EVENT_KEYBOARD_A );
-	if( result == E_FAIL ) throw Exception( "SimConnect_MapClientEventToSimEvent" );
+	try
+	{
+		mapValueIdToSimEvent( EVT_MCP_COURSE_SELECTOR_L, 	COURSE_L );
+		mapValueIdToSimEvent( EVT_MCP_COURSE_SELECTOR_L + 1,COURSE_R );
+		mapValueIdToSimEvent( EVT_MCP_FD_SWITCH_L, 			FD_SW_L );
+		mapValueIdToSimEvent( EVT_MCP_FD_SWITCH_L + 1,		FD_SW_R );
+		mapValueIdToSimEvent( EVT_MCP_AT_ARM_SWITCH, 		AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_N1_SWITCH, 			ANNUN_N1 );
+		mapValueIdToSimEvent( EVT_MCP_SPEED_SWITCH, 		ANNUN_SPEED );
+		mapValueIdToSimEvent( EVT_MCP_CO_SWITCH, 			AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_SPEED_SELECTOR, 		AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_VNAV_SWITCH, 			AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_SPD_INTV_SWITCH, 		AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_BANK_ANGLE_SELECTOR, 	AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_HEADING_SELECTOR, 	AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_LVL_CHG_SWITCH, 		AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_HDG_SEL_SWITCH, 		AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_APP_SWITCH, 			COURSE_L );
+		mapValueIdToSimEvent( EVT_MCP_ALT_HOLD_SWITCH, 		COURSE_R );
+		mapValueIdToSimEvent( EVT_MCP_VS_SWITCH, 			FD_SW_L );
+		mapValueIdToSimEvent( EVT_MCP_VOR_LOC_SWITCH, 		FD_SW_R );
+		mapValueIdToSimEvent( EVT_MCP_LNAV_SWITCH, 			AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_ALTITUDE_SELECTOR, 	AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_VS_SELECTOR, 			COURSE_L );
+		mapValueIdToSimEvent( EVT_MCP_CMD_A_SWITCH, 		COURSE_R );
+		mapValueIdToSimEvent( EVT_MCP_CMD_B_SWITCH, 		FD_SW_L );
+		mapValueIdToSimEvent( EVT_MCP_CWS_A_SWITCH, 		FD_SW_R );
+		mapValueIdToSimEvent( EVT_MCP_CWS_B_SWITCH, 		AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_DISENGAGE_BAR, 		AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_FD_SWITCH_R, 			AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_COURSE_SELECTOR_R, 	AT_ARM_SW );
+		mapValueIdToSimEvent( EVT_MCP_ALT_INTV_SWITCH, 		AT_ARM_SW );
+	}
+	catch( Exception & e )
+	{
+		throw;
+	}
 }
 
 
 void MCPEntity::setValueData( Global::ValueId::Type valueId, uint32_t valueData )
 {
+	// Check if the id is valid.
+	if( !Global::ValueId::MCP::isValid( valueId ) )
+	{
+		throw Exception( "invalid id" );
+	}
+
 	SimConnect_TransmitClientEvent( simConnect, 0, valueId, valueData,
 		SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY );
 }
@@ -86,6 +123,12 @@ void MCPEntity::setValueData( Global::ValueId::Type valueId, uint32_t valueData 
 
 uint32_t MCPEntity::getValueData( Global::ValueId::Type valueId )
 {
+	// Check if the id is valid.
+	if( !Global::ValueId::MCP::isValid( valueId ) )
+	{
+		throw Exception( "invalid id" );
+	}
+
 	return values[ valueId ].load();
 }
 

@@ -23,16 +23,15 @@ PacketFactory::createPacketFromReceivedData( const char *data, size_t size )
 	}
 	else if( packetType == Packet::PACKET_TYPE_REQUEST )
 	{
-		// validate request type
+		// evaluate request type
 		int requestType = data[ RequestPacket::BYTE_POS_REQUEST_TYPE ];
-
 		if( requestType == RequestPacket::REQUEST_TYPE_SINGLE_VALUE )
 		{
 			packet.reset( new SingleValueRequestPacket() );
 		}
 		else if( requestType == RequestPacket::REQUEST_TYPE_ALL_VALUES )
 		{
-			packet.reset( new AllValuesRequestPacket( size ) );
+			packet.reset( new AllValuesRequestPacket() );
 		}
 		else
 		{
@@ -58,11 +57,11 @@ PacketFactory::createPacketFromReceivedData( const char *data, size_t size )
 }
 
 
-std::unique_ptr<DataPacket> 
+std::unique_ptr<DataPacket>
 PacketFactory::createSingleValueDataPacket( unsigned int entityId, unsigned int valueId, uint32_t value )
 {
 	return std::unique_ptr<DataPacket>( 
-		new SingleValueRequestPacket( entityId, valueId, value ) );
+		new SingleValueDataPacket( entityId, valueId, value ) );
 }
 
 

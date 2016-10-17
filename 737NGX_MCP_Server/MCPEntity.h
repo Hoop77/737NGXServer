@@ -21,26 +21,23 @@ namespace SimConnect
 	public:
 		explicit MCPEntity( const std::string & name );
 
+		static constexpr int DATA_REQUEST_ID = 0;
+
 		void setup();
 		void dispatch( SIMCONNECT_RECV *data, DWORD size, void *context );
 		void close();
 
-		void setValueData( Global::ValueId::Type valueId, uint32_t valueData );
-		uint32_t getValueData( Global::ValueId::Type valueId );
-		void setEntireData( const uint32_t *valueData );
-		void getEntireData( uint32_t *valueData );
+		void transmitEvent( unsigned int eventId, uint32_t eventParameter );
+		uint32_t getSingleValue( unsigned int valueId );
+		void getAllValues( uint32_t *values );
 
 	private:
-		enum DataRequestId
-		{
-			DATA_REQUEST,
-			AIR_PATH_REQUEST
-		};
-
 		void setupDataConnection();
 		void setupEvents();
+		void processNgxData( PMDG_NGX_Data *ngxData );
+		void compare( unsigned int valueId, uint32_t newValue );
 
-		// Atomic array storing our value data.
-		std::atomic<uint32_t> values[ Global::ValueId::MCP::VALUE_COUNT ];
+		// Atomic array storing our values.
+		std::atomic<uint32_t> values[ Global::ValueId::MCP::COUNT ];
 	};
 }

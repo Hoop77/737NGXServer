@@ -13,15 +13,15 @@
 namespace SimConnect
 {
 	// GoF Observer Pattern (Push Update Notification)
-	class EntityDataListener
+	class EntityValueListener
 	{
 	public:
-		virtual ~EntityDataListener() {}
+		virtual ~EntityValueListener() {}
 
-		virtual void OnDataChanged( Global::ValueId::Type valueId, uint32_t valueData ) = 0;
+		virtual void OnValueChanged( unsigned int valueId, uint32_t value ) = 0;
 
 	protected:
-		explicit EntityDataListener() {}
+		explicit EntityValueListener() {}
 	};
 
 	class Entity
@@ -33,27 +33,26 @@ namespace SimConnect
 		virtual void dispatch( SIMCONNECT_RECV *data, DWORD size, void *context ) = 0;
 		virtual void close() = 0;
 
-		virtual void setValueData( Global::ValueId::Type valueId, uint32_t valueData ) = 0;
-		virtual uint32_t getValueData( Global::ValueId::Type valueId ) = 0;
-		virtual void setEntireData( const uint32_t *valueData ) = 0;
-		virtual void getEntireData( uint32_t *valueData ) = 0;
+		virtual void transmitEvent( unsigned int eventId, uint32_t eventParameter ) = 0;
+		virtual uint32_t getSingleValue( unsigned int valueId ) = 0;
+		virtual void getAllValues( uint32_t *values ) = 0;
 
 		void obtainSimConnectHandle( HANDLE simConnect );
 		std::string getName() const;
 
-		void registerDataListener( std::shared_ptr<EntityDataListener> listener );
-		void deregisterDataListener( std::shared_ptr<EntityDataListener> listener );
+		void registerValueListener( std::shared_ptr<EntityValueListener> listener );
+		void deregisterValueListener( std::shared_ptr<EntityValueListener> listener );
 
 	protected:
 		explicit Entity( const std::string & name );
 
-		void notifyDataListeners( Global::ValueId::Type valueId, uint32_t valueData );
+		void notifyValueListeners( unsigned int valueId, uint32_t value );
 
 		// helper function
-		void mapValueIdToSimEvent( SIMCONNECT_CLIENT_EVENT_ID simConnectEventId, int valueId );
+		void mapClientEventToSimEvent( SIMCONNECT_CLIENT_EVENT_ID simConnectEventId, int valueId );
 
 		const std::string name;
 		HANDLE simConnect;
-		std::vector<std::shared_ptr<EntityDataListener>> dataListeners;
+		std::vector<std::shared_ptr<EntityValueListener>> valueListeners;
 	};
 }

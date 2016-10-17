@@ -10,6 +10,7 @@
 #include <Windows.h>
 #include "SimConnect.h"
 #include "SimConnectEntity.h"
+#include "SimConnectException.h"
 
 
 namespace SimConnect
@@ -31,18 +32,5 @@ namespace SimConnect
 		HANDLE simConnect;
 		std::vector<std::shared_ptr<Entity>> entities;
 		bool quit;
-	};
-
-
-	class Exception : std::exception
-	{
-	public:
-		Exception( const char *msg )
-			: msg( msg ) {}
-
-		const char *what() const throw() { return msg; }
-
-	private:
-		const char *msg;
 	};
 }

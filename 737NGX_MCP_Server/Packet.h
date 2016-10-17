@@ -3,6 +3,7 @@
 
 #include "PacketFactory.h"
 #include "Global.h"
+#include <assert.h>
 
 
 #include <memory>
@@ -60,7 +61,7 @@ namespace Protocol
 			return data[ BYTE_POS_ENTITY_ID ];
 		}
 
-		const char *getData() const
+		char *getData() const
 		{
 			return data;
 		}
@@ -91,13 +92,20 @@ namespace Protocol
 
 	public:
 		// event-ID (32 bit)
-		static constexpr int BYTE_POS_EVENT_ID_LOW_LOW 2;
-		static constexpr int BYTE_POS_EVENT_ID_LOW_HIGH 3;
-		static constexpr int BYTE_POS_EVENT_ID_HIGH_LOW 4;
-		static constexpr int BYTE_POS_EVENT_ID_HIGH_HIGH 5;
+		static constexpr int BYTE_POS_EVENT_ID_LOW_LOW = 2;
+		static constexpr int BYTE_POS_EVENT_ID_LOW_HIGH = 3;
+		static constexpr int BYTE_POS_EVENT_ID_HIGH_LOW = 4;
+		static constexpr int BYTE_POS_EVENT_ID_HIGH_HIGH = 5;
 
-		// packet min size + event-ID (4)
-		static constexpr size_t SIZE = Packet::MIN_SIZE + 4;
+		// event-parameter (32 bit)
+		static constexpr int BYTE_POS_EVENT_PARAMETER_LOW_LOW = 6;
+		static constexpr int BYTE_POS_EVENT_PARAMETER_LOW_HIGH = 7;
+		static constexpr int BYTE_POS_EVENT_PARAMETER_HIGH_LOW = 8;
+		static constexpr int BYTE_POS_EVENT_PARAMETER_HIGH_HIGH = 9;
+
+
+		// packet min size + event-ID (4) + event-parameter
+		static constexpr size_t SIZE = Packet::MIN_SIZE + 8;
 
 		unsigned int getEventId()
 		{
@@ -109,11 +117,23 @@ namespace Protocol
 			return eventId;
 		}
 
+		uint32_t getEventParameter()
+		{
+			unsigned int eventParameter =
+				data[ BYTE_POS_EVENT_PARAMETER_LOW_LOW ]
+				+ (data[ BYTE_POS_EVENT_PARAMETER_LOW_HIGH ] << 8)
+				+ (data[ BYTE_POS_EVENT_PARAMETER_HIGH_LOW ] << 16)
+				+ (data[ BYTE_POS_EVENT_PARAMETER_HIGH_HIGH ] << 24);
+			return eventParameter;
+		}
+
 	protected:
-		EventPacket( size_t size ) 
+		EventPacket()
 			: Packet()
-			, size( SIZE ) {}
-	}
+		{
+			Packet::size = SIZE;
+		}
+	};
 
 
 	class RequestPacket : public Packet
@@ -157,8 +177,8 @@ namespace Protocol
 
 	public:
 		// value-ID (16 bit)
-		static constexpr int BYPTE_POS_VALUE_ID_LOW = 3;
-		static constexpr int BYPTE_POS_VALUE_ID_HIGH = 4;
+		static constexpr int BYTE_POS_VALUE_ID_LOW = 3;
+		static constexpr int BYTE_POS_VALUE_ID_HIGH = 4;
 
 		// request packet min size + value-ID (2)
 		static constexpr size_t SIZE = RequestPacket::MIN_SIZE + 2;
@@ -172,9 +192,11 @@ namespace Protocol
 		}
 
 	protected:
-		SingleValueRequestPacket( size_t size ) 
+		SingleValueRequestPacket() 
 			: RequestPacket()
-			, size( SIZE ) {}
+		{
+			size = SIZE;
+		}
 	};
 
 
@@ -194,9 +216,11 @@ namespace Protocol
 		static constexpr size_t SIZE = RequestPacket::MIN_SIZE;
 
 	protected:
-		AllValuesRequestPacket( size_t size ) 
+		AllValuesRequestPacket() 
 			: RequestPacket()
-			, size( SIZE ) {}
+		{
+			size = SIZE;
+		}
 	};
 
 
@@ -233,14 +257,14 @@ namespace Protocol
 
 	public:
 		// value-ID (16 bit)
-		static constexpr int BYTE_POS_VALUE_ID_LOW 3;
-		static constexpr int BYTE_POS_VALUE_ID_HIGH 4;
+		static constexpr int BYTE_POS_VALUE_ID_LOW = 3;
+		static constexpr int BYTE_POS_VALUE_ID_HIGH = 4;
 
 		// value (32 bit)
-		static constexpr int BYTE_POS_SINGLE_VALUE_LOW_LOW 5;
-		static constexpr int BYTE_POS_SINGLE_VALUE_LOW_HIGH 6;
-		static constexpr int BYTE_POS_SINGLE_VALUE_HIGH_LOW 7;
-		static constexpr int BYTE_POS_SINGLE_VALUE_HIGH_HIGH 8;
+		static constexpr int BYTE_POS_SINGLE_VALUE_LOW_LOW = 5;
+		static constexpr int BYTE_POS_SINGLE_VALUE_LOW_HIGH = 6;
+		static constexpr int BYTE_POS_SINGLE_VALUE_HIGH_LOW = 7;
+		static constexpr int BYTE_POS_SINGLE_VALUE_HIGH_HIGH = 8;
 
 		// data packet min size + value-ID (2) + value (4)
 		static constexpr size_t SIZE = DataPacket::MIN_SIZE + 6;
@@ -249,8 +273,9 @@ namespace Protocol
 		// Data packet for single value request.
 		SingleValueDataPacket( unsigned int entityId, unsigned int valueId, uint32_t value )
 			: DataPacket()
-			, size( SingleValueRequestPacket::SIZE ) 
 		{
+			size = SIZE;
+
 			data = new char[ size ];
 			// packet type
 			data[ Packet::BYTE_POS_PACKET_TYPE ] = Packet::PACKET_TYPE_DATA;
@@ -267,7 +292,7 @@ namespace Protocol
 			data[ BYTE_POS_SINGLE_VALUE_HIGH_LOW ] = (value & 0x00ff0000) >> 16;
 			data[ BYTE_POS_SINGLE_VALUE_HIGH_HIGH ] = (value & 0xff000000) >> 24;
 		}
-	}
+	};
 
 
 	// Packet from server sending all values of an entity to a client.
@@ -304,8 +329,8 @@ namespace Protocol
 			data[ Packet::BYTE_POS_ENTITY_ID ] = entityId;
 			// request type
 			data[ DataPacket::BYTE_POS_REQUEST_TYPE ] = RequestPacket::REQUEST_TYPE_SINGLE_VALUE;
-			// values
+			// copy values
 			std::memcpy( data, values, valueCount * 4 );
 		}
-	}
+	};
 }

@@ -66,14 +66,14 @@
     <ClCompile Include="MCPEntity.cpp">
       <Filter>Quelldateien\SimConnect</Filter>
     </ClCompile>
-    <ClCompile Include="CommandConnectionHandler.cpp">
-      <Filter>Quelldateien\CommandHandling</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandServer.cpp">
-      <Filter>Quelldateien\CommandHandling</Filter>
-    </ClCompile>
-    <ClCompile Include="Packet.cpp">
+    <ClCompile Include="PacketFactory.cpp">
       <Filter>Quelldateien\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandHandlingConnectionHandler.cpp">
+      <Filter>Quelldateien\CommandHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandHandlingServer.cpp">
+      <Filter>Quelldateien\CommandHandling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,12 +107,6 @@
     <ClInclude Include="MCPEntity.h">
       <Filter>Headerdateien\SimConnect</Filter>
     </ClInclude>
-    <ClInclude Include="CommandConnectionHandler.h">
-      <Filter>Headerdateien\CommandHandling</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandServer.h">
-      <Filter>Headerdateien\CommandHandling</Filter>
-    </ClInclude>
     <ClInclude Include="WorkQueue.h">
       <Filter>Headerdateien\Utils</Filter>
     </ClInclude>
@@ -125,11 +119,23 @@
     <ClInclude Include="Global.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Protocol.h">
+    <ClInclude Include="PacketFactory.h">
       <Filter>Headerdateien\Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="ProtocolException.h">
-      <Filter>Headerdateien\Protocol</Filter>
+    <ClInclude Include="SimConnectException.h">
+      <Filter>Headerdateien\SimConnect</Filter>
+    </ClInclude>
+    <ClInclude Include="Converting.h">
+      <Filter>Headerdateien\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandHandlingServer.h">
+      <Filter>Headerdateien\CommandHandling</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandHandlingConnectionHandler.h">
+      <Filter>Headerdateien\CommandHandling</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandHandlingException.h">
+      <Filter>Headerdateien\CommandHandling</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

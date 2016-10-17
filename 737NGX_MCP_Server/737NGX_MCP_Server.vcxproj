@@ -147,11 +147,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CommandConnectionHandler.cpp" />
+    <ClCompile Include="CommandHandlingConnectionHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MCPEntity.cpp" />
-    <ClCompile Include="CommandServer.cpp" />
-    <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="CommandHandlingServer.cpp" />
+    <ClCompile Include="PacketFactory.cpp" />
     <ClCompile Include="SimConnectClient.cpp" />
     <ClCompile Include="SimConnectEntity.cpp" />
     <ClCompile Include="TCP.cpp" />
@@ -160,15 +160,17 @@
     <ClCompile Include="TCPStream.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommandConnectionHandler.h" />
+    <ClInclude Include="CommandHandlingConnectionHandler.h" />
+    <ClInclude Include="CommandHandlingException.h" />
+    <ClInclude Include="Converting.h" />
+    <ClInclude Include="SimConnectException.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="MCPEntity.h" />
     <ClInclude Include="Packet.h" />
+    <ClInclude Include="PacketFactory.h" />
     <ClInclude Include="PMDG_NGX_SDK.h" />
-    <ClInclude Include="CommandServer.h" />
-    <ClInclude Include="Protocol.h" />
-    <ClInclude Include="ProtocolException.h" />
+    <ClInclude Include="CommandHandlingServer.h" />
     <ClInclude Include="SimConnect.h" />
     <ClInclude Include="SimConnectClient.h" />
     <ClInclude Include="SimConnectEntity.h" />

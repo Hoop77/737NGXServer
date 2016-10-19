@@ -2,20 +2,13 @@
 using namespace SimConnect;
 
 
-Client::Client()
-	: quit( false ) {}
+Client::Client( std::shared_ptr<std::vector<std::unique_ptr<Entity>>> entities )
+	: entities( entities )
+	, quit( false ) {}
 
 
-Client::~Client() {}
-
-
-void Client::addEntity( std::shared_ptr<Entity> entity )
-{
-	entities.push_back( entity );
-}
-
-
-void Client::connect()
+void 
+Client::connect()
 {
 	// open simconnect
 	HRESULT result = SimConnect_Open( &simConnect, "737NGX Server", NULL, 0, 0, 0 );
@@ -25,7 +18,7 @@ void Client::connect()
 	}
 
 	// setup entities
-	for( auto & entity : entities )
+	for( auto & entity : *entities )
 	{
 		entity->obtainSimConnectHandle( simConnect );
 		try
@@ -44,7 +37,8 @@ void Client::connect()
 }
 
 
-void Client::run()
+void 
+Client::run()
 {
 	// main loop
 	while( !quit )
@@ -55,7 +49,7 @@ void Client::run()
 	}
 
 	// close entities
-	for( auto & entity : entities )
+	for( auto & entity : *entities )
 	{
 		entity->close();
 	}
@@ -65,7 +59,8 @@ void Client::run()
 }
 
 
-void CALLBACK Client::dispatch( SIMCONNECT_RECV *data, DWORD size, void *context )
+void CALLBACK
+Client::dispatch( SIMCONNECT_RECV *data, DWORD size, void *context )
 {
 	Client *self = static_cast<Client *>(context);
 
@@ -76,7 +71,7 @@ void CALLBACK Client::dispatch( SIMCONNECT_RECV *data, DWORD size, void *context
 	else
 	{
 		// call each entity's dispatch routine
-		for( auto & entity : self->entities )
+		for( auto & entity : *self->entities )
 		{
 			entity->dispatch( data, size, context );
 		}

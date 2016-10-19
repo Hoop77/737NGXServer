@@ -158,7 +158,7 @@ MCPEntity::compare( unsigned int valueId, uint32_t newValue )
 	if( values[ valueId ] != newValue )
 	{
 		values[ valueId ] = newValue;
-		notifyValueListeners( valueId, newValue );
+		notifyOnEntityValueChangedListeners( valueId, newValue );
 	}
 }
 
@@ -166,12 +166,6 @@ MCPEntity::compare( unsigned int valueId, uint32_t newValue )
 void 
 MCPEntity::transmitEvent( unsigned int eventId, uint32_t eventParameter )
 {
-	// Check if the id is valid.
-	if( !Global::EventId::MCP::isValid( eventId ) )
-	{
-		throw Exception( "invalid id" );
-	}
-
 	SimConnect_TransmitClientEvent( simConnect, 0, eventId, eventParameter,
 		SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY );
 }

@@ -13,15 +13,15 @@
 namespace SimConnect
 {
 	// GoF Observer Pattern (Push Update Notification)
-	class EntityValueListener
+	class OnEntityValueChangedListener
 	{
 	public:
-		virtual ~EntityValueListener() {}
+		virtual ~OnEntityValueChangedListener() {}
 
-		virtual void OnValueChanged( unsigned int valueId, uint32_t value ) = 0;
+		virtual void OnEntityValueChanged( unsigned int valueId, uint32_t value ) = 0;
 
 	protected:
-		explicit EntityValueListener() {}
+		explicit OnEntityValueChangedListener() {}
 	};
 
 	class Entity
@@ -40,19 +40,19 @@ namespace SimConnect
 		void obtainSimConnectHandle( HANDLE simConnect );
 		std::string getName() const;
 
-		void registerValueListener( std::shared_ptr<EntityValueListener> listener );
-		void deregisterValueListener( std::shared_ptr<EntityValueListener> listener );
+		void registerOnEntityValueChangedListener( std::shared_ptr<OnEntityValueChangedListener> listener );
+		void deregisterOnEntityValueChangedListener( std::shared_ptr<OnEntityValueChangedListener> listener );
 
 	protected:
 		explicit Entity( const std::string & name );
 
-		void notifyValueListeners( unsigned int valueId, uint32_t value );
+		void notifyOnEntityValueChangedListeners( unsigned int valueId, uint32_t value );
 
 		// helper function
 		void mapClientEventToSimEvent( SIMCONNECT_CLIENT_EVENT_ID simConnectEventId, int valueId );
 
 		const std::string name;
 		HANDLE simConnect;
-		std::vector<std::shared_ptr<EntityValueListener>> valueListeners;
+		std::vector<std::shared_ptr<OnEntityValueChangedListener>> valueListeners;
 	};
 }

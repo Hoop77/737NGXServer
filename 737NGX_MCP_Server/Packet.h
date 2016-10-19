@@ -11,6 +11,8 @@
 
 namespace Protocol
 {
+	class PacketFactory;
+
 	class PacketException : public std::exception
 	{
 	public:
@@ -72,7 +74,11 @@ namespace Protocol
 		}
 
 	protected:
-		Packet() {}
+		Packet( size_t size ) 
+			: size( size )
+		{
+			data = new char[ size ];
+		}
 
 		char *data;
 		size_t size;
@@ -129,10 +135,7 @@ namespace Protocol
 
 	protected:
 		EventPacket()
-			: Packet()
-		{
-			Packet::size = SIZE;
-		}
+			: Packet( SIZE ) {}
 	};
 
 
@@ -159,7 +162,8 @@ namespace Protocol
 		}
 
 	protected:
-		RequestPacket() : Packet() {}
+		RequestPacket( size_t size ) 
+			: Packet( size ) {}
 	};
 
 
@@ -193,10 +197,7 @@ namespace Protocol
 
 	protected:
 		SingleValueRequestPacket() 
-			: RequestPacket()
-		{
-			size = SIZE;
-		}
+			: RequestPacket( SIZE ) {}
 	};
 
 
@@ -216,11 +217,8 @@ namespace Protocol
 		static constexpr size_t SIZE = RequestPacket::MIN_SIZE;
 
 	protected:
-		AllValuesRequestPacket() 
-			: RequestPacket()
-		{
-			size = SIZE;
-		}
+		AllValuesRequestPacket()
+			: RequestPacket( SIZE ) {}
 	};
 
 
@@ -238,7 +236,8 @@ namespace Protocol
 		static constexpr size_t MIN_SIZE = Packet::MIN_SIZE + 1;
 
 	protected:
-		DataPacket() : Packet() {}
+		DataPacket( size_t size ) 
+			: Packet( size ) {}
 	};
 
 
@@ -272,11 +271,8 @@ namespace Protocol
 	protected:
 		// Data packet for single value request.
 		SingleValueDataPacket( unsigned int entityId, unsigned int valueId, uint32_t value )
-			: DataPacket()
+			: DataPacket( SIZE )
 		{
-			size = SIZE;
-
-			data = new char[ size ];
 			// packet type
 			data[ Packet::BYTE_POS_PACKET_TYPE ] = Packet::PACKET_TYPE_DATA;
 			// entity id
@@ -319,10 +315,10 @@ namespace Protocol
 
 	protected:
 		AllValuesDataPacket( unsigned int entityId, uint32_t *values, size_t valueCount )
+			: DataPacket( MIN_SIZE + valueCount * 4 )
 		{
 			assert( valueCount <= MAX_VALUE_COUNT );
 
-			data = new char[ MIN_SIZE + valueCount * 4 ];
 			// packet type
 			data[ Packet::BYTE_POS_PACKET_TYPE ] = Packet::PACKET_TYPE_DATA;
 			// entity id

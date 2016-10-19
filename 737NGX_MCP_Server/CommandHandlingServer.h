@@ -3,6 +3,7 @@
 
 #include "WorkQueue.h"
 #include "TCPStream.h"
+#include "TCPAcceptor.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -24,6 +25,8 @@ namespace CommandHandling
 			size_t connectionHandlerCount,
 			std::shared_ptr<std::vector<std::unique_ptr<SimConnect::Entity>>> entities
 		);
+
+		~Server();
 
 		// starts the connection handler threads
 		void run();
@@ -54,9 +57,8 @@ namespace CommandHandling
 		std::vector<std::unique_ptr<ConnectionHandler>> connectionHandlers;
 		size_t connectionHandlerCount;
 
-		// address information
-		std::string ip;
-		uint16_t port;
+		// TCP Acceptor to accept incoming connections to clients
+		TCP::Acceptor acceptor;
 
 		// mutex to handle async printing
 		std::mutex printMutex;

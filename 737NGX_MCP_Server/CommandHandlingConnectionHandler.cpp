@@ -47,6 +47,7 @@ ConnectionHandler::run()
 			{
 				// Remove a stream from the queue with timout 1s.
 				auto stream = std::move( streamQueue->dequeue( 1000 ) );
+				std::string ip( stream->getPeerIP() );
 
 				try
 				{

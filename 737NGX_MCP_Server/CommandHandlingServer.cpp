@@ -9,15 +9,14 @@
 using namespace CommandHandling;
 
 
-Server::Server( 
-	const std::string & ip, 
-	uint16_t port, 
-	size_t connectionHandlerCount, 
-	std::vector<std::unique_ptr<SimConnect::Entity>> & entities )
-	: ip( ip )
-	, port( port )
-	, connectionHandlerCount( connectionHandlerCount )
+Server::Server(
+	const std::string & ip,
+	uint16_t port,
+	size_t connectionHandlerCount,
+	std::shared_ptr<std::vector<std::unique_ptr<SimConnect::Entity>>> entities )
+	: connectionHandlerCount( connectionHandlerCount )
 	, entities( entities )
+	, acceptor( ip, port )
 {
 	using Utils::WorkQueue;
 	using std::unique_ptr;
@@ -31,6 +30,9 @@ Server::Server(
 		connectionHandlers.push_back(
 			unique_ptr<ConnectionHandler>( new ConnectionHandler( *this ) ) );
 	}
+
+	// start TCP acceptor
+	acceptor.start();
 }
 
 
@@ -51,10 +53,6 @@ Server::run()
 
 	try
 	{
-		// Accept incoming TCP connections and add them to the queue.
-		TCP::Acceptor acceptor( ip, port );
-		acceptor.start();
-
 		while( 1 )
 		{
 			auto stream = acceptor.accept();
@@ -111,6 +109,9 @@ Server::handleRequestPacket( Protocol::RequestPacket *requestPacket )
 {
 	using namespace Protocol;
 
+	// result
+	std::unique_ptr<DataPacket> dataPacket( nullptr );
+
 	// verify entity-ID
 	unsigned int entityId = requestPacket->getEntityId();
 
@@ -118,8 +119,6 @@ Server::handleRequestPacket( Protocol::RequestPacket *requestPacket )
 	{
 		// get a pointer to the entity
 		SimConnect::Entity *entity = entities->at( entityId ).get();
-
-		std::unique_ptr<DataPacket> dataPacket( nullptr );
 
 		int requestType = requestPacket->getRequestType();
 		if( requestType == RequestPacket::REQUEST_TYPE_SINGLE_VALUE )

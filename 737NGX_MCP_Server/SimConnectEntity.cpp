@@ -24,16 +24,16 @@ std::string Entity::getName() const
 }
 
 
-void Entity::registerValueListener( std::shared_ptr<EntityValueListener> listener )
+void Entity::registerOnEntityValueChangedListener( std::shared_ptr<OnEntityValueChangedListener> listener )
 {
 	valueListeners.push_back( listener );
 }
 
 
-void Entity::deregisterValueListener( std::shared_ptr<EntityValueListener> listener )
+void Entity::deregisterOnEntityValueChangedListener( std::shared_ptr<OnEntityValueChangedListener> listener )
 {
 	auto pos = std::find_if( valueListeners.begin(), valueListeners.end(),
-		[&]( std::shared_ptr<EntityValueListener> const & l )
+		[&]( std::shared_ptr<OnEntityValueChangedListener> const & l )
 	{
 		return l.get() == listener.get();
 	} );
@@ -43,22 +43,22 @@ void Entity::deregisterValueListener( std::shared_ptr<EntityValueListener> liste
 }
 
 
-void Entity::notifyValueListeners( unsigned int valueId, uint32_t value )
+void Entity::notifyOnEntityValueChangedListeners( unsigned int valueId, uint32_t value )
 {
 	for( auto & listener : valueListeners )
 	{
-		listener->OnValueChanged( valueId, value );
+		listener->OnEntityValueChanged( valueId, value );
 	}
 }
 
 
-void Entity::mapClientEventToSimEvent( SIMCONNECT_CLIENT_EVENT_ID simConnectEventId, int valueId )
+void Entity::mapClientEventToSimEvent( SIMCONNECT_CLIENT_EVENT_ID simConnectEventId, int eventId )
 {
 	// The simconnect event id must be specified as a string starting with '#'.
 	std::string id( std::string( "#" )
 		.append( std::to_string( simConnectEventId ) ) );
 
-	HRESULT result = SimConnect_MapClientEventToSimEvent( simConnect, valueId, id.c_str );
+	HRESULT result = SimConnect_MapClientEventToSimEvent( simConnect, eventId, id.c_str() );
 	if( result == E_FAIL ) 
 		throw Exception( "SimConnect_MapClientEventToSimEvent" );
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "packet.h"
+#include "Packet.h"
 
 
 #include <memory>
@@ -9,6 +9,9 @@
 
 namespace Protocol
 {
+	class Packet;
+	class DataPacket;
+
 	class PacketFactory
 	{
 	public:

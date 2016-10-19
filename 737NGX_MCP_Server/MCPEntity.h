@@ -22,7 +22,7 @@ namespace SimConnect
 		explicit MCPEntity( const std::string & name );
 
 		static constexpr int DATA_REQUEST_ID = 0;
-
+		
 		void setup();
 		void dispatch( SIMCONNECT_RECV *data, DWORD size, void *context );
 		void close();

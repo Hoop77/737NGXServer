@@ -44,7 +44,7 @@ namespace Utils
 			notEmptyCondition.notify_one();
 		}
 
-		T & dequeue( int timeoutMilliseconds )  // throws Utils::TimoutException
+		T dequeue( int timeoutMilliseconds )  // throws Utils::TimoutException
 		{
 			std::chrono::milliseconds timeout( timeoutMilliseconds );
 			std::unique_lock<std::mutex> lock( queueMutex );
@@ -57,7 +57,7 @@ namespace Utils
 					throw TimeoutException();
 			}
 
-			T & item = theQueue.front();
+			T item = std::move( theQueue.front() );
 			theQueue.pop();
 			return item;
 		}

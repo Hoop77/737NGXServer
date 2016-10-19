@@ -90,19 +90,19 @@ Server::message( const std::string & msg )
 void 
 Server::handleEventPacket( Protocol::EventPacket *eventPacket )
 {
-	// verify entity-ID
 	unsigned int entityId = eventPacket->getEntityId();
-	if( !Global::EntityId::isValid( entityId ) )
-	{
-		message( "Invalid entity-ID!" );
-		return;
-	}
-
 	unsigned int eventId = eventPacket->getEventId();
 	uint32_t eventParameter = eventPacket->getEventParameter();
 
 	// transmit the event to the entity
-	entities[ entityId ]->transmitEvent( eventId, eventParameter );
+	try
+	{
+		entities->at( entityId )->transmitEvent( eventId, eventParameter );
+	}
+	catch( std::out_of_range & e )
+	{
+		message( "invalid entity-ID" );
+	}
 }
 
 
@@ -113,39 +113,45 @@ Server::handleRequestPacket( Protocol::RequestPacket *requestPacket )
 
 	// verify entity-ID
 	unsigned int entityId = requestPacket->getEntityId();
-	if( !Global::EntityId::isValid( entityId ) )
-	{
-		throw Exception( "invalid entity-ID" );
-	}
 
-	std::unique_ptr<DataPacket> dataPacket( nullptr );
+	try
+	{
+		// get a pointer to the entity
+		SimConnect::Entity *entity = entities->at( entityId ).get();
 
-	int requestType = requestPacket->getRequestType();
-	if( requestType == RequestPacket::REQUEST_TYPE_SINGLE_VALUE )
-	{
-		SingleValueRequestPacket *singleValueRequestPacket = static_cast<SingleValueRequestPacket *>( requestPacket );
-		// get the value-ID from the packet
-		unsigned int valueId = singleValueRequestPacket->getValueId();
-		// get the corresponding value from the entity
-		uint32_t value = entities[ entityId ]->getSingleValue( valueId );
-		// create data packet
-		dataPacket = PacketFactory::createSingleValueDataPacket( entityId, valueId, value );
+		std::unique_ptr<DataPacket> dataPacket( nullptr );
+
+		int requestType = requestPacket->getRequestType();
+		if( requestType == RequestPacket::REQUEST_TYPE_SINGLE_VALUE )
+		{
+			SingleValueRequestPacket *singleValueRequestPacket = static_cast<SingleValueRequestPacket *>( requestPacket );
+			// get the value-ID from the packet
+			unsigned int valueId = singleValueRequestPacket->getValueId();
+			// get the corresponding value from the entity
+			uint32_t value = entity->getSingleValue( valueId );
+			// create data packet
+			dataPacket = PacketFactory::createSingleValueDataPacket( entityId, valueId, value );
+		}
+		else if( requestType == RequestPacket::REQUEST_TYPE_ALL_VALUES )
+		{
+			AllValuesRequestPacket *allValuesRequestPacket = static_cast<AllValuesRequestPacket *>(requestPacket);
+			// get the number of values of the entity
+			unsigned int valueIdCount = Global::getValueIdCountFromEntityId( entityId );
+			// create array of values
+			std::unique_ptr<uint32_t> values( new uint32_t[ valueIdCount ] );
+			// get the values from the entity
+			entity->getAllValues( values.get() );
+			// create data packet
+			dataPacket = PacketFactory::createAllValuesDataPacket( entityId, values.get(), valueIdCount );
+		}
+		else
+		{
+			throw Exception( "invalid request type" );
+		}
 	}
-	else if( requestType == RequestPacket::REQUEST_TYPE_ALL_VALUES )
+	catch( std::out_of_range & e )
 	{
-		AllValuesRequestPacket *allValuesRequestPacket = static_cast<AllValuesRequestPacket *>(requestPacket);
-		// get the number of values of the entity
-		unsigned int valueIdCount = Global::getValueIdCountFromEntityId( entityId );
-		// create array of values
-		std::unique_ptr<uint32_t> values( new uint32_t[ valueIdCount ] );
-		// get the values from the entity
-		entities[ entityId ]->getAllValues( values.get() );
-		// create data packet
-		dataPacket = PacketFactory::createAllValuesDataPacket( entityId, values.get(), valueIdCount );
-	}
-	else
-	{
-		throw Exception( "invalid request type" );
+		message( "invalid entity-ID" );
 	}
 
 	return dataPacket;

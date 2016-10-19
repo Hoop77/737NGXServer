@@ -22,7 +22,7 @@ namespace CommandHandling
 			const std::string & ip,
 			uint16_t port,
 			size_t connectionHandlerCount,
-			std::vector<std::unique_ptr<SimConnect::Entity>> & entities
+			std::shared_ptr<std::vector<std::unique_ptr<SimConnect::Entity>>> entities
 		);
 
 		// starts the connection handler threads
@@ -45,7 +45,7 @@ namespace CommandHandling
 
 	private:
 		// simconnect entities
-		std::vector<std::unique_ptr<SimConnect::Entity>> & entities;
+		std::shared_ptr<std::vector<std::unique_ptr<SimConnect::Entity>>> entities;
 
 		// work queue of streams to handle client connections
 		std::unique_ptr<Utils::WorkQueue<std::unique_ptr<TCP::Stream>>> streamQueue;

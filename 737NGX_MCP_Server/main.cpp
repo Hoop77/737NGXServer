@@ -1,98 +1,47 @@
+#include "SimConnectClient.h"
+#include "MCPEntity.h"
 #include <iostream>
 #include <string>
 #include <memory>
-
-#include "SimConnectClient.h"
-#include "MCPEntity.h"
+#include <vector>
+#include <thread>
 
 
 int main( int argc, char *argv[] )
 {
-	SimConnect::Client simConnectClient;
+	using namespace std;
 
-	std::shared_ptr<SimConnect::MCPEntity> mcpEntity( new SimConnect::MCPEntity( "Multi Control Panel Module" ) );
-	simConnectClient.addEntity( mcpEntity );
+	// the entities vector
+	shared_ptr<vector<unique_ptr<SimConnect::Entity>>> entities;
+
+	// the MCP entity
+	unique_ptr<SimConnect::Entity> mcpEntity(
+		new MCPEntity( "Multi Control Panel" ) );
+
+	// add MCP entity to the entities vector
+	entities->push_back( move( mcpEntity ) );
+
+	// create the server
+	CommandHandling::Server server( "127.0.0.1", 7654, 1, entities );
+
+	// create simconnect client
+	SimConnect::Client simConnectClient( entities );
+
+	// connect to simconnect
+	simConnectClient.connect();
+
+	// create thread for simconnect client
+	thread simConnectThread( [&]
+	{
+		simConnectClient.start();
+	} );
+
+	// create thread for server
+	thread serverThread( [&]
+	{
+		server.run();
+	} );
 
 	std::cin.get();
 	return 0;
 }
-
-
-//#undef UNICODE
-//
-//
-//#include "TCP.h"
-//#include "TCPAcceptor.h"
-//#include "TCPStream.h"
-//#include "TCPException.h"
-//#include <memory>
-//#include <thread>
-//#include <iostream>
-//
-//
-//#include "global.h"
-//
-//
-//int __cdecl main( void )
-//{
-//    TCP::init();
-//
-//    std::thread commandServer( []() 
-//    {
-//        TCP::Acceptor commandAcceptor( "127.0.0.1", 7654 );
-//        commandAcceptor.start();
-//
-//        TCP::Stream *stream = commandAcceptor.accept();
-//
-//        size_t len;
-//        char buf[ 256 ];
-//        try 
-//        {
-//            while( (len = stream->read( buf, sizeof( buf ) )) > 0 )
-//            {
-//                std::cout << "Command received: " << buf << endl;
-//            }
-//        }
-//        catch( TCP::Exception &e )
-//        {
-//            cout << e.what() << endl;
-//        }
-//
-//        delete stream;
-//    } );
-//
-//    std::thread updateServer( []() 
-//    {
-//        TCP::Acceptor updateAcceptor( "127.0.0.1", 7655 );
-//        updateAcceptor.start();
-//
-//        TCP::Stream *stream = updateAcceptor.accept();
-//
-//        char *buf = "This is new Information!";
-//        size_t len = strlen( buf ) + 1;
-//        try
-//        {
-//            while( stream->write( buf, len ) > 0 )
-//            {
-//                std::this_thread::sleep_for( 2s );
-//            }
-//        }
-//        catch( TCP::Exception &e )
-//        {
-//            cout << e.what() << endl;
-//        }
-//
-//        delete stream;
-//    } );
-//
-//    commandServer.join();
-//    updateServer.join();
-//
-//    TCP::cleanup();
-//
-//    std::cout << "Done." << endl;
-//
-//    getchar();
-//
-//    return 0;
-//}

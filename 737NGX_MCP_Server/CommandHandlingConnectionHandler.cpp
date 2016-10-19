@@ -33,8 +33,8 @@ ConnectionHandler::run()
 	running = true;
 	runThread.reset( new std::thread( [&]
 	{
-		// Get the queue from the server which we will permanently try to
-		// extract streams from to receive new packets.
+		// Get the queue from the server. 
+		// To receive packets, we will permanently try to extract streams from the queue.
 		auto streamQueue = server.getStreamQueue();
 		char packetBuffer[ Packet::MAX_SIZE ];
 
@@ -50,7 +50,7 @@ ConnectionHandler::run()
 
 				try
 				{
-					// Receive incoming command data.
+					// Receive incoming packet.
 					size_t size = stream->read( packetBuffer, Packet::MAX_SIZE );
 					if( size == 0 )
 					{

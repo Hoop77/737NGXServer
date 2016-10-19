@@ -18,19 +18,16 @@ namespace SimConnect
 	class Client
 	{
 	public:
-		explicit Client();
-		virtual ~Client();
+		Client( std::shared_ptr<std::vector<std::unique_ptr<Entity>>> entities );
 
 		void connect();
 		void run();
-
-		void addEntity( std::shared_ptr<Entity> entity );
 
 	private:
 		static void CALLBACK dispatch( SIMCONNECT_RECV* data, DWORD size, void *context );
 
 		HANDLE simConnect;
-		std::vector<std::shared_ptr<Entity>> entities;
+		std::shared_ptr<std::vector<std::unique_ptr<Entity>>> entities;
 		bool quit;
 	};
 }

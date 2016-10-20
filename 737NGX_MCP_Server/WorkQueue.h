@@ -7,6 +7,7 @@
 #include <queue>
 #include <mutex>
 #include <chrono>
+#include <type_traits>
 
 
 namespace Utils
@@ -57,7 +58,9 @@ namespace Utils
 					throw TimeoutException();
 			}
 
+			// We std::move so we are compatible with move-only objects like std::unique_ptr.
 			T item = std::move( theQueue.front() );
+
 			theQueue.pop();
 			return item;
 		}

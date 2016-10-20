@@ -22,6 +22,7 @@ namespace TCP
 		Acceptor & operator=( const Acceptor & other ) = delete;
 
 		void start();
+		void close();
 		std::unique_ptr<Stream> accept();
 
 	private:

@@ -12,7 +12,6 @@ using namespace CommandHandling;
 
 ConnectionHandler::ConnectionHandler( Server & server )
 	: server( server )
-	, runThread( nullptr )
 	, running( false ) {}
 
 

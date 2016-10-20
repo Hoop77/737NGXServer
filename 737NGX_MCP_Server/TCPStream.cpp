@@ -21,7 +21,7 @@ Stream::~Stream()
 size_t 
 Stream::write( const char *buffer, size_t len )
 {
-    int result = ::send( socket, buffer, (int) len, 0 );
+    int result = send( socket, buffer, (int) len, 0 );
 
     if( result < 0 )
         throw Exception( "send failed" );
@@ -33,7 +33,7 @@ Stream::write( const char *buffer, size_t len )
 size_t 
 Stream::read( char *buffer, size_t len )
 {
-    int result = ::recv( socket, buffer, len, 0 );
+    int result = recv( socket, buffer, len, 0 );
 
     if( result < 0 )
         throw Exception( "recv failed" );
@@ -45,7 +45,10 @@ Stream::read( char *buffer, size_t len )
 void 
 Stream::close()
 {
-    int result = ::closesocket( socket );
+    if( socket = INVALID_SOCKET )
+        return;
+
+    int result = closesocket( socket );
     if( result != 0 )
         throw Exception( "closesocket failed" );
 

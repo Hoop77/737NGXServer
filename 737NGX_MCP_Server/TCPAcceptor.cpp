@@ -15,9 +15,7 @@ Acceptor::Acceptor( const std::string & address, uint16_t port )
 Acceptor::~Acceptor()
 {
     if( listenSocket != INVALID_SOCKET )
-    {
         closesocket( listenSocket );
-    }
 }
 
 
@@ -96,6 +94,20 @@ Acceptor::start()
     }
 
     listening = true;
+}
+
+
+void
+Acceptor::close()
+{
+    if( listenSocket = INVALID_SOCKET )
+        return;
+    
+    int result = closesocket( socket );
+    if( result != 0 )
+        throw Exception( "closesocket failed" );
+
+    listenSocket = INVALID_SOCKET;
 }
 
 

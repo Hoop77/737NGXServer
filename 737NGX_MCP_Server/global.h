@@ -6,6 +6,10 @@
 
 namespace Global
 {
+	// global print function
+	void println( const string & msg );
+
+
 	namespace EntityId
 	{
 		constexpr unsigned int MCP = 0;
@@ -18,6 +22,7 @@ namespace Global
 		}
 	}
 
+	
 	// Value-IDs serve for getting values from an entity.
 	namespace ValueId
 	{

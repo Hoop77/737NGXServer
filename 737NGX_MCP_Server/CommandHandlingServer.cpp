@@ -4,6 +4,7 @@
 #include "TCPAcceptor.h"
 #include "TCPException.h"
 #include "PacketFactory.h"
+#include "Global.h"
 
 
 using namespace CommandHandling;
@@ -32,7 +33,14 @@ Server::Server(
 	}
 
 	// start TCP acceptor
-	acceptor.start();
+	try
+	{
+		acceptor.start();
+	}
+	catch( TCP::Exception & e )
+	{
+		throw Exception( "TCP Error!" );
+	}
 }
 
 
@@ -80,8 +88,7 @@ Server::stop()
 void 
 Server::message( const std::string & msg )
 {
-	std::lock_guard<std::mutex> lock( printMutex );
-	std::cout << msg << std::endl;
+	Global::println( msg );
 }
 
 

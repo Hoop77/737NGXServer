@@ -47,7 +47,7 @@ void Entity::notifyOnEntityValueChangedListeners( unsigned int valueId, uint32_t
 {
 	for( auto & listener : valueListeners )
 	{
-		listener->OnEntityValueChanged( valueId, value );
+		listener->onEntityValueChanged( valueId, value );
 	}
 }
 

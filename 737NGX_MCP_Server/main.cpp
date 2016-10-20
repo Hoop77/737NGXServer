@@ -1,4 +1,5 @@
 #include "TCP.h"
+#include "Global.h"
 #include "SimConnectClient.h"
 #include "SimConnectEntity.h"
 #include "MCPEntity.h"
@@ -9,6 +10,19 @@
 #include <memory>
 #include <vector>
 #include <thread>
+#include <mutex>
+
+
+namespace Global
+{
+	static std::mutex printMutex;
+
+	void println( const string & msg )
+	{
+		std::lock_guard<std::mutex> lock( priintMutex );
+		std::cout << msg << endl;
+	}
+}
 
 
 int main( int argc, char *argv[] )

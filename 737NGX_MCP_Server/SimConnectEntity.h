@@ -1,29 +1,19 @@
 #pragma once
 
+#include "SimConnectOnEntityValueChangedListener.h"
+#include "SimConnect.h"
+#include "Global.h"
+
+
 #include <string>
 #include <vector>
-
-#include "SimConnect.h"
 #include <windows.h>
 #include <memory>
-
-#include "Global.h"
+#include <functional>
 
 
 namespace SimConnect
 {
-	// GoF Observer Pattern (Push Update Notification)
-	class OnEntityValueChangedListener
-	{
-	public:
-		virtual ~OnEntityValueChangedListener() {}
-
-		virtual void OnEntityValueChanged( unsigned int valueId, uint32_t value ) = 0;
-
-	protected:
-		explicit OnEntityValueChangedListener() {}
-	};
-
 	class Entity
 	{
 	public:
@@ -38,7 +28,6 @@ namespace SimConnect
 		virtual void getAllValues( uint32_t *values ) = 0;
 
 		void obtainSimConnectHandle( HANDLE simConnect );
-		std::string getName() const;
 
 		void registerOnEntityValueChangedListener( std::shared_ptr<OnEntityValueChangedListener> listener );
 		void deregisterOnEntityValueChangedListener( std::shared_ptr<OnEntityValueChangedListener> listener );
@@ -51,7 +40,6 @@ namespace SimConnect
 		// helper function
 		void mapClientEventToSimEvent( SIMCONNECT_CLIENT_EVENT_ID simConnectEventId, int valueId );
 
-		const std::string name;
 		HANDLE simConnect;
 		std::vector<std::shared_ptr<OnEntityValueChangedListener>> valueListeners;
 	};

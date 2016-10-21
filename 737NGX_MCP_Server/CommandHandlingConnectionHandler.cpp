@@ -17,7 +17,8 @@ ConnectionHandler::ConnectionHandler( Server & server )
 
 ConnectionHandler::~ConnectionHandler()
 {
-	stop();
+	try { stop(); }
+	catch( ... ) {}
 }
 
 

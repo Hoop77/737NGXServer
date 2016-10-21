@@ -152,6 +152,7 @@
     <ClCompile Include="MCPEntity.cpp" />
     <ClCompile Include="CommandHandlingServer.cpp" />
     <ClCompile Include="PacketFactory.cpp" />
+    <ClCompile Include="PMDG_NGX_ConnectionTest.cpp" />
     <ClCompile Include="SimConnectClient.cpp" />
     <ClCompile Include="SimConnectEntity.cpp" />
     <ClCompile Include="TCP.cpp" />

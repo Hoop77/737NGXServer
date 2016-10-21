@@ -75,6 +75,9 @@
     <ClCompile Include="CommandHandlingServer.cpp">
       <Filter>Quelldateien\CommandHandling</Filter>
     </ClCompile>
+    <ClCompile Include="PMDG_NGX_ConnectionTest.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PMDG_NGX_SDK.h">

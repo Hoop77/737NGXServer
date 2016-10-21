@@ -2,12 +2,13 @@
 
 
 #include "PMDG_NGX_SDK.h"
+#include <string>
 
 
 namespace Global
 {
 	// global print function
-	void println( const string & msg );
+	void println( const std::string & msg );
 
 
 	namespace EntityId

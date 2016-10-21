@@ -14,8 +14,9 @@ Acceptor::Acceptor( const std::string & address, uint16_t port )
 
 Acceptor::~Acceptor()
 {
-    if( listenSocket != INVALID_SOCKET )
-        closesocket( listenSocket );
+	// Close the listen socket on destruction.
+	try { stop(); }
+	catch( ... ) {}
 }
 
 
@@ -98,12 +99,12 @@ Acceptor::start()
 
 
 void
-Acceptor::close()
+Acceptor::stop()
 {
-    if( listenSocket = INVALID_SOCKET )
+    if( listenSocket == INVALID_SOCKET )
         return;
     
-    int result = closesocket( socket );
+    int result = closesocket( listenSocket );
     if( result != 0 )
         throw Exception( "closesocket failed" );
 

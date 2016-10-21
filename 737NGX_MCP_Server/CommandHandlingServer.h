@@ -28,7 +28,7 @@ namespace CommandHandling
 
 		~Server();
 
-		// starts the connection handler threads
+		// blocking - starts the connection handler threads and permanently accepts TCP client connections
 		void run();
 
 		// stops the connection handlers
@@ -47,6 +47,8 @@ namespace CommandHandling
 		Utils::WorkQueue<std::unique_ptr<TCP::Stream>> *getStreamQueue() const { return streamQueue.get(); }
 
 	private:
+		bool running;
+
 		// simconnect entities
 		std::shared_ptr<std::vector<std::unique_ptr<SimConnect::Entity>>> entities;
 
@@ -57,7 +59,7 @@ namespace CommandHandling
 		std::vector<std::unique_ptr<ConnectionHandler>> connectionHandlers;
 		size_t connectionHandlerCount;
 
-		// TCP Acceptor to accept incoming connections to clients
+		// accepts incoming TCP client connections to create streams
 		TCP::Acceptor acceptor;
 
 		// mutex to handle async printing

@@ -6,8 +6,7 @@ using namespace SimConnect;
 #include "Converting.h"
 
 
-MCPEntity::MCPEntity( const std::string & name )
-	: Entity( name ) {}
+MCPEntity::MCPEntity() : Entity() {}
 
 
 void 

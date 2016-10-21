@@ -33,7 +33,7 @@ namespace SimConnect
 		void deregisterOnEntityValueChangedListener( std::shared_ptr<OnEntityValueChangedListener> listener );
 
 	protected:
-		explicit Entity( const std::string & name );
+		Entity();
 
 		void notifyOnEntityValueChangedListeners( unsigned int valueId, uint32_t value );
 

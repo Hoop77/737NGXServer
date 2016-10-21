@@ -18,6 +18,7 @@ Server::Server(
 	: connectionHandlerCount( connectionHandlerCount )
 	, entities( entities )
 	, acceptor( ip, port )
+	, running( false )
 {
 	using Utils::WorkQueue;
 	using std::unique_ptr;
@@ -31,37 +32,37 @@ Server::Server(
 		connectionHandlers.push_back(
 			unique_ptr<ConnectionHandler>( new ConnectionHandler( *this ) ) );
 	}
-
-	// start TCP acceptor
-	try
-	{
-		acceptor.start();
-	}
-	catch( TCP::Exception & e )
-	{
-		throw Exception( "TCP Error!" );
-	}
 }
 
 
 Server::~Server()
 {
-	stop();
+	try { stop(); }
+	catch( ... ) {}
 }
 
 
 void 
 Server::run()
 {
+	if( running )
+		return;
+
+	running = true;
+
 	// Lets run the connection handlers.
 	for( auto & connectionHandler : connectionHandlers )
 	{
 		connectionHandler->run();
 	}
 
+	// Permanently accept incoming TCP streams as client requests 
+	// and add them to the queue to process them later.
 	try
 	{
-		while( 1 )
+		acceptor.start();
+
+		while( running )
 		{
 			auto stream = acceptor.accept();
 			streamQueue->enqueue( std::move( stream ) );
@@ -69,7 +70,11 @@ Server::run()
 	}
 	catch( TCP::Exception & e )
 	{
-		message( std::string( "TCP Error: " ).append( e.what() ) );
+		// If the server is about to stop, we must stop the blocking "accept()" method.
+		// To do this, someone must call "stop()" on the acceptor (in another thread) which will raise
+		// an exception from the "accept()" method so we must ignore it when "running" is false!
+		if( running )
+			message( std::string( "TCP Error: " ).append( e.what() ) );
 	}
 }
 
@@ -77,10 +82,23 @@ Server::run()
 void 
 Server::stop()
 {
-	// Stopping the connection handlers.
-	for( auto & connectionHandler : connectionHandlers )
+	if( !running )
+		return;
+
+	try
 	{
-		connectionHandler->stop();
+		// Stopping the connection handlers.
+		for( auto & connectionHandler : connectionHandlers )
+		{
+			connectionHandler->stop();
+		}
+
+		// Stopping the blocking "accept()" method.
+		acceptor.stop();
+	}
+	catch( ... )
+	{
+		message( "Cannot stop command handling server!\nIn order to close this application, use task manager!" );
 	}
 }
 

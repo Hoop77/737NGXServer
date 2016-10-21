@@ -22,12 +22,13 @@ namespace SimConnect
 
 		void connect();
 		void run();
+		void stop();
 
 	private:
 		static void CALLBACK dispatch( SIMCONNECT_RECV* data, DWORD size, void *context );
 
 		HANDLE simConnect;
 		std::shared_ptr<std::vector<std::unique_ptr<Entity>>> entities;
-		bool quit;
+		bool running;
 	};
 }

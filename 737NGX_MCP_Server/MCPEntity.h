@@ -19,7 +19,7 @@ namespace SimConnect
 	class MCPEntity : public Entity
 	{
 	public:
-		explicit MCPEntity();
+		MCPEntity();
 
 		static constexpr int DATA_REQUEST_ID = 0;
 		

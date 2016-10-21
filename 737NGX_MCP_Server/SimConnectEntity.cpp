@@ -5,22 +5,13 @@ using namespace SimConnect;
 #include <algorithm>
 
 
-Entity::Entity( const std::string & name )
-	: name( name ) {}
-
-
+Entity::Entity() {}
 Entity::~Entity() {}
 
 
 void Entity::obtainSimConnectHandle( HANDLE simConnect )
 {
 	this->simConnect = simConnect;
-}
-
-
-std::string Entity::getName() const
-{
-	return name;
 }
 
 

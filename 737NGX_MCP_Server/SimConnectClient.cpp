@@ -4,7 +4,7 @@ using namespace SimConnect;
 
 Client::Client( std::shared_ptr<std::vector<std::unique_ptr<Entity>>> entities )
 	: entities( entities )
-	, quit( false ) {}
+	, running( false ) {}
 
 
 void 
@@ -28,7 +28,7 @@ Client::connect()
 		catch( const Exception & e )
 		{
 			SimConnect_Close( simConnect );
-			std::cout << "Failed to setup '" << entity->getName() << "'" << " with message: '" << e.what() << "'" << std::endl;
+			std::cout << "Failed to setup with message: '" << e.what() << "'" << std::endl;
 			throw Exception( "Failed to connect to Flight Simulator!" );
 		}
 	}
@@ -40,8 +40,13 @@ Client::connect()
 void 
 Client::run()
 {
+	if( running )
+		return;
+
+	running = true;
+
 	// main loop
-	while( !quit )
+	while( running )
 	{
 		SimConnect_CallDispatch( simConnect, &Client::dispatch, this );
 
@@ -59,6 +64,13 @@ Client::run()
 }
 
 
+void
+Client::stop()
+{
+	running = true;
+}
+
+
 void CALLBACK
 Client::dispatch( SIMCONNECT_RECV *data, DWORD size, void *context )
 {
@@ -66,7 +78,7 @@ Client::dispatch( SIMCONNECT_RECV *data, DWORD size, void *context )
 
 	if( data->dwID == SIMCONNECT_RECV_ID_QUIT )
 	{
-		self->quit = true;
+		self->running = true;
 	}
 	else
 	{

@@ -137,8 +137,6 @@ namespace Protocol
 		friend class PacketFactory;
 
 	public:
-		virtual ~RequestPacket() {}
-
 		// request types
 		static constexpr int REQUEST_TYPE_SINGLE_VALUE = 0;
 		static constexpr int REQUEST_TYPE_ALL_VALUES = 1;
@@ -148,6 +146,8 @@ namespace Protocol
 
 		// packet min size + request type (1)
 		static constexpr size_t MIN_SIZE = Packet::MIN_SIZE + 1;
+
+		virtual ~RequestPacket() {}
 
 		uint8_t getRequestType()
 		{
@@ -219,13 +219,13 @@ namespace Protocol
 		friend class PacketFactory;
 
 	public:
-		virtual ~DataPacket() {}
-
 		// request type (8 bit)
 		static constexpr int BYTE_POS_REQUEST_TYPE = 2;
 
 		// packet min size + request type (1)
 		static constexpr size_t MIN_SIZE = Packet::MIN_SIZE + 1;
+
+		virtual ~DataPacket() {}
 
 	protected:
 		DataPacket( size_t size ) 

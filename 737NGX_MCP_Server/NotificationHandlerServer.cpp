@@ -65,7 +65,7 @@ Server::startBroadcastThread()
 			try
 			{
 				// Get packet to broadcast with timeout: 1s.
-				auto packet = std::move( packetQueue.dequeue( 1000 ) );
+				auto packet = packetQueue.dequeue( 1000 );
 
 				// Lock the list of streams.
 				std::lock_guard<std::mutex> streamListLock( streamListMutex );

@@ -46,7 +46,7 @@ ConnectionHandler::run()
 			try
 			{
 				// Remove a stream from the queue with timout 1s.
-				auto stream = std::move( streamQueue->dequeue( 1000 ) );
+				auto stream = streamQueue->dequeue( 1000 );
 
 				try
 				{

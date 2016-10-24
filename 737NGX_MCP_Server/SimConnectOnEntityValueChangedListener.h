@@ -10,12 +10,14 @@ namespace SimConnect
 	class OnEntityValueChangedListener
 	{
 	public:
-		OnEntityValueChangedListener( 
+		OnEntityValueChangedListener(
 			std::function<void( unsigned int, uint32_t )> onEntityValueChanged )
-			: onEntityValueChanged( onEntityValueChanged ) {}
+		{
+			this->onEntityValueChanged = onEntityValueChanged;
+		}
 
 		// unsigned int: value-ID
 		// uint32_t: value
-		std::function<void( unsigned int, uint32_t )>onEntityValueChanged;
+		std::function<void( unsigned int, uint32_t )> onEntityValueChanged;
 	};
 }

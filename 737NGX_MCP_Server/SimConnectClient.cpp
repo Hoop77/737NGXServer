@@ -78,7 +78,7 @@ Client::dispatch( SIMCONNECT_RECV *data, DWORD size, void *context )
 
 	if( data->dwID == SIMCONNECT_RECV_ID_QUIT )
 	{
-		self->running = true;
+		self->running = false;
 	}
 	else
 	{

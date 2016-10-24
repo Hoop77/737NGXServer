@@ -40,6 +40,12 @@
     <Filter Include="Quelldateien\Protocol">
       <UniqueIdentifier>{d14d8f24-2169-4368-8a6a-004411d0d4d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\NotificationHandling">
+      <UniqueIdentifier>{11c57ac3-d0e0-44a0-9faf-5c150356867a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\NotificationHandling">
+      <UniqueIdentifier>{f1a8961c-5e5d-4c80-b5d3-9181e42f605a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -75,8 +81,8 @@
     <ClCompile Include="CommandHandlingServer.cpp">
       <Filter>Quelldateien\CommandHandling</Filter>
     </ClCompile>
-    <ClCompile Include="PMDG_NGX_ConnectionTest.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="NotificationHandlerServer.cpp">
+      <Filter>Quelldateien\NotificationHandling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +145,12 @@
     </ClInclude>
     <ClInclude Include="CommandHandlingException.h">
       <Filter>Headerdateien\CommandHandling</Filter>
+    </ClInclude>
+    <ClInclude Include="NotificationHandlingServer.h">
+      <Filter>Headerdateien\NotificationHandling</Filter>
+    </ClInclude>
+    <ClInclude Include="SimConnectOnEntityValueChangedListener.h">
+      <Filter>Headerdateien\SimConnect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

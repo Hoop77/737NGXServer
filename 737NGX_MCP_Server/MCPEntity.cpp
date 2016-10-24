@@ -156,7 +156,7 @@ MCPEntity::compare( unsigned int valueId, uint32_t newValue )
 {
 	if( values[ valueId ] != newValue )
 	{
-		values[ valueId ] = newValue;
+		values[ valueId ].store( newValue );
 		notifyOnEntityValueChangedListeners( valueId, newValue );
 	}
 }
@@ -176,7 +176,7 @@ MCPEntity::getSingleValue( unsigned int valueId )
 	// Check if the id is valid.
 	if( !Global::ValueId::MCP::isValid( valueId ) )
 	{
-		throw Exception( "invalid id" );
+		throw Exception( "invalid value-ID" );
 	}
 
 	return values[ valueId ].load();

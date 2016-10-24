@@ -5,7 +5,7 @@ using namespace Protocol;
 
 
 std::unique_ptr<Packet> 
-PacketFactory::createPacketFromReceivedData( const char *data, size_t size )
+PacketFactory::createPacketFromReceivedData( const uint8_t *data, size_t size )
 {
 	if( data == nullptr )
 	{

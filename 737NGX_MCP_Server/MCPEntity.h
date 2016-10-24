@@ -5,6 +5,7 @@
 #include "SimConnect.h"
 #include "PMDG_NGX_SDK.h"
 #include "global.h"
+#include "WorkQueue.h"
 
 
 #include <iostream>

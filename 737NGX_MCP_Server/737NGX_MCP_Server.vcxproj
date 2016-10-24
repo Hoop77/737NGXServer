@@ -151,8 +151,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MCPEntity.cpp" />
     <ClCompile Include="CommandHandlingServer.cpp" />
+    <ClCompile Include="NotificationHandlerServer.cpp" />
     <ClCompile Include="PacketFactory.cpp" />
-    <ClCompile Include="PMDG_NGX_ConnectionTest.cpp" />
     <ClCompile Include="SimConnectClient.cpp" />
     <ClCompile Include="SimConnectEntity.cpp" />
     <ClCompile Include="TCP.cpp" />
@@ -164,6 +164,7 @@
     <ClInclude Include="CommandHandlingConnectionHandler.h" />
     <ClInclude Include="CommandHandlingException.h" />
     <ClInclude Include="Converting.h" />
+    <ClInclude Include="NotificationHandlingServer.h" />
     <ClInclude Include="SimConnectException.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="Global.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="SimConnect.h" />
     <ClInclude Include="SimConnectClient.h" />
     <ClInclude Include="SimConnectEntity.h" />
+    <ClInclude Include="SimConnectOnEntityValueChangedListener.h" />
     <ClInclude Include="TCP.h" />
     <ClInclude Include="TCPAcceptor.h" />
     <ClInclude Include="TCPConnector.h" />

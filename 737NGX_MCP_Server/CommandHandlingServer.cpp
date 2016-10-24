@@ -4,6 +4,7 @@
 #include "TCPAcceptor.h"
 #include "TCPException.h"
 #include "PacketFactory.h"
+#include "SimConnectException.h"
 #include "Global.h"
 
 
@@ -21,16 +22,14 @@ Server::Server(
 	, running( false )
 {
 	using Utils::WorkQueue;
-	using std::unique_ptr;
 	// initialize the streams queue
-	streamQueue = unique_ptr<WorkQueue<unique_ptr<TCP::Stream>>>(
-		new WorkQueue<unique_ptr<TCP::Stream>>() );
+	streamQueue = std::make_unique<WorkQueue<std::unique_ptr<TCP::Stream>>>();
 
 	// Creating the specified number of connection handlers (we don't let them run at this point).
 	for( size_t i = 0; i < connectionHandlerCount; i++ )
 	{
 		connectionHandlers.push_back(
-			unique_ptr<ConnectionHandler>( new ConnectionHandler( *this ) ) );
+			std::make_unique<ConnectionHandler>( *this ) );
 	}
 }
 
@@ -85,16 +84,18 @@ Server::stop()
 	if( !running )
 		return;
 
+	running = false;
+
 	try
 	{
+		// Stopping the blocking "accept()" method.
+		acceptor.stop();
+
 		// Stopping the connection handlers.
 		for( auto & connectionHandler : connectionHandlers )
 		{
 			connectionHandler->stop();
 		}
-
-		// Stopping the blocking "accept()" method.
-		acceptor.stop();
 	}
 	catch( ... )
 	{
@@ -176,6 +177,10 @@ Server::handleRequestPacket( Protocol::RequestPacket *requestPacket )
 	catch( std::out_of_range & e )
 	{
 		message( "invalid entity-ID" );
+	}
+	catch( SimConnect::Exception & e )
+	{
+		message( e.what() );
 	}
 
 	return dataPacket;

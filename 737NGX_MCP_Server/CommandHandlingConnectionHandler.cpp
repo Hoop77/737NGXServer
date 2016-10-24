@@ -60,8 +60,7 @@ ConnectionHandler::run()
 					}
 
 					// Create a packet from the received data.
-					std::unique_ptr<Packet> receivedPacket =
-						PacketFactory::createPacketFromReceivedData( packetBuffer, size );
+					auto receivedPacket = PacketFactory::createPacketFromReceivedData( (uint8_t *) packetBuffer, size );
 
 					// Evaluate the packet type.
 					int packetType = receivedPacket->getPacketType();
@@ -75,11 +74,10 @@ ConnectionHandler::run()
 					else if( packetType == Packet::PACKET_TYPE_REQUEST )
 					{
 						// The server will return a Data-Packet which we will transmit to the client.
-						std::unique_ptr<DataPacket> transmitPacket(
-							server.handleRequestPacket(
-								static_cast<RequestPacket *>( receivedPacket.get() ) ) );
+						auto transmitPacket = server.handleRequestPacket(
+								static_cast<RequestPacket *>( receivedPacket.get() ) );
 
-						size = stream->write( transmitPacket->getData(), transmitPacket->getSize() );
+						size = stream->write( (char *) transmitPacket->getData(), transmitPacket->getSize() );
 						if( size == 0 )
 						{
 							server.message( std::string( stream->getPeerIP() ).append( " has closed unexpectedly." ) );

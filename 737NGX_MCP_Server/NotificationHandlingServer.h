@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Utils.h"
+#include "WorkQueue.h"
 #include "TCP.h"
 #include "TCPStream.h"
 #include "TCPAcceptor.h"
+#include "Packet.h"
 
 
 #include <list>
@@ -33,15 +34,21 @@ namespace NotificationHandling
 		void broadcastNotification( unsigned int entityId, unsigned int valueId, uint32_t value );
 
 	private:
+		void startBroadcastThread();
+
+		// streams to broadcast notifications to
 		std::list<std::unique_ptr<TCP::Stream>> streamList;
+
+		// adding and removing streams gets done in different threads so we need a mutex
 		std::mutex streamListMutex;
 
-		Utils::WorkQueue<std::unique_ptr<Protocol::SingleValueDataPacket>> packetQueue;
+		// packets (the notification data) to broadcast
+		Utils::WorkQueue<std::unique_ptr<Protocol::DataPacket>> packetQueue;
 
 		std::unique_ptr<std::thread> broadcastThread;
 
 		TCP::Acceptor acceptor;
 
 		bool running;
-	}
+	};
 }

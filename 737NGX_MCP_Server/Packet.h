@@ -53,17 +53,17 @@ namespace Protocol
 			delete[] data;
 		}
 
-		int getPacketType() const
+		uint8_t getPacketType() const
 		{
 			return data[ BYTE_POS_PACKET_TYPE ];
 		}
 
-		unsigned int getEntityId() const
+		uint8_t getEntityId() const
 		{
 			return data[ BYTE_POS_ENTITY_ID ];
 		}
 
-		char *getData() const
+		uint8_t *getData() const
 		{
 			return data;
 		}
@@ -77,10 +77,10 @@ namespace Protocol
 		Packet( size_t size ) 
 			: size( size )
 		{
-			data = new char[ size ];
+			data = new uint8_t[ size ];
 		}
 
-		char *data;
+		uint8_t *data;
 		size_t size;
 	};
 
@@ -109,27 +109,20 @@ namespace Protocol
 		static constexpr int BYTE_POS_EVENT_PARAMETER_HIGH_LOW = 8;
 		static constexpr int BYTE_POS_EVENT_PARAMETER_HIGH_HIGH = 9;
 
-
 		// packet min size + event-ID (4) + event-parameter
 		static constexpr size_t SIZE = Packet::MIN_SIZE + 8;
 
-		unsigned int getEventId()
+		uint32_t getEventId()
 		{
-			unsigned int eventId = 
-				data[ BYTE_POS_EVENT_ID_LOW_LOW ]
-				+ (data[ BYTE_POS_EVENT_ID_LOW_HIGH ] << 8)
-				+ (data[ BYTE_POS_EVENT_ID_HIGH_LOW ] << 16)
-				+ (data[ BYTE_POS_EVENT_ID_HIGH_HIGH ] << 24);
+			uint32_t eventId = 0;
+				std::memcpy( &eventId, data + BYTE_POS_EVENT_ID_LOW_LOW, 4 );
 			return eventId;
 		}
 
 		uint32_t getEventParameter()
 		{
-			unsigned int eventParameter =
-				data[ BYTE_POS_EVENT_PARAMETER_LOW_LOW ]
-				+ (data[ BYTE_POS_EVENT_PARAMETER_LOW_HIGH ] << 8)
-				+ (data[ BYTE_POS_EVENT_PARAMETER_HIGH_LOW ] << 16)
-				+ (data[ BYTE_POS_EVENT_PARAMETER_HIGH_HIGH ] << 24);
+			uint32_t eventParameter = 0;
+			std::memcpy( &eventParameter, data + BYTE_POS_EVENT_PARAMETER_LOW_LOW, 4 );
 			return eventParameter;
 		}
 
@@ -156,7 +149,7 @@ namespace Protocol
 		// packet min size + request type (1)
 		static constexpr size_t MIN_SIZE = Packet::MIN_SIZE + 1;
 
-		int getRequestType()
+		uint8_t getRequestType()
 		{
 			return data[ BYTE_POS_REQUEST_TYPE ];
 		}
@@ -187,11 +180,10 @@ namespace Protocol
 		// request packet min size + value-ID (2)
 		static constexpr size_t SIZE = RequestPacket::MIN_SIZE + 2;
 
-		unsigned int getValueId()
+		uint16_t getValueId()
 		{
-			unsigned int valueId =
-				data[ BYTE_POS_VALUE_ID_LOW ]
-				+ (data[ BYTE_POS_VALUE_ID_HIGH ] << 8);
+			uint16_t valueId = 0;
+			std::memcpy( &valueId, data + BYTE_POS_VALUE_ID_LOW, 2 );
 			return valueId;
 		}
 
@@ -270,7 +262,7 @@ namespace Protocol
 
 	protected:
 		// Data packet for single value request.
-		SingleValueDataPacket( unsigned int entityId, unsigned int valueId, uint32_t value )
+		SingleValueDataPacket( uint8_t entityId, uint16_t valueId, uint32_t value )
 			: DataPacket( SIZE )
 		{
 			// packet type
@@ -280,13 +272,9 @@ namespace Protocol
 			// request type
 			data[ DataPacket::BYTE_POS_REQUEST_TYPE ] = RequestPacket::REQUEST_TYPE_SINGLE_VALUE;
 			// value id
-			data[ BYTE_POS_VALUE_ID_LOW ] = valueId & 0x000000ff;
-			data[ BYTE_POS_VALUE_ID_HIGH ] = (valueId & 0x0000ff00) >> 8;
+			std::memcpy( data + BYTE_POS_VALUE_ID_LOW, &valueId, 2 );
 			// value
-			data[ BYTE_POS_SINGLE_VALUE_LOW_LOW ] = value & 0x00000000;
-			data[ BYTE_POS_SINGLE_VALUE_LOW_HIGH ] = (value & 0x0000ff00) >> 8;
-			data[ BYTE_POS_SINGLE_VALUE_HIGH_LOW ] = (value & 0x00ff0000) >> 16;
-			data[ BYTE_POS_SINGLE_VALUE_HIGH_HIGH ] = (value & 0xff000000) >> 24;
+			std::memcpy( data + BYTE_POS_SINGLE_VALUE_LOW_LOW, &value, 4 );
 		}
 	};
 
@@ -314,7 +302,7 @@ namespace Protocol
 		static constexpr int MAX_VALUE_COUNT = (MAX_SIZE - MIN_SIZE) / 4;
 
 	protected:
-		AllValuesDataPacket( unsigned int entityId, uint32_t *values, size_t valueCount )
+		AllValuesDataPacket( uint8_t entityId, uint32_t *values, size_t valueCount )
 			: DataPacket( MIN_SIZE + valueCount * 4 )
 		{
 			assert( valueCount <= MAX_VALUE_COUNT );
@@ -326,7 +314,7 @@ namespace Protocol
 			// request type
 			data[ DataPacket::BYTE_POS_REQUEST_TYPE ] = RequestPacket::REQUEST_TYPE_SINGLE_VALUE;
 			// copy values
-			std::memcpy( data, values, valueCount * 4 );
+			std::memcpy( data + BYTE_POS_ALL_VALUES, values, valueCount * 4 );
 		}
 	};
 }

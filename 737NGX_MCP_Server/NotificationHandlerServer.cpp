@@ -1,5 +1,6 @@
-#include "NotificationnHandlingServer.h"
+#include "NotificationHandlingServer.h"
 #include "Global.h"
+#include "TCPException.h"
 
 #include <thread>
 
@@ -9,20 +10,18 @@ using namespace NotificationHandling;
 
 Server::Server( const std::string & ip, uint16_t port )
 	: acceptor( ip, port )
-	, running( false ) 
-{
-	acceptor.start();
-}
+	, running( false ) {}
 
 
 Server::~Server()
 {
-
+	try { stop(); }
+	catch( ... ) {}
 }
 
-// starts the connection handler threads
+
 void 
-Server::run();
+Server::run()
 {
 	if( running )
 		return;
@@ -30,6 +29,32 @@ Server::run();
 	running = true;
 
 	// Start the boradcasting thread.
+	startBroadcastThread();
+
+	// Accept and add incoming clients to the list of TCP streams.
+	try
+	{
+		acceptor.start();
+
+		while( running )
+		{
+			auto stream = acceptor.accept();
+			// Lock the list to add the new stream.
+			std::lock_guard<std::mutex> streamListLock( streamListMutex );
+			streamList.push_back( std::move( stream ) );
+		}
+	}
+	catch( TCP::Exception & e )
+	{
+		if( running )
+			message( std::string( "TCP Error: " ).append( e.what() ) );
+	}
+}
+
+
+void 
+Server::startBroadcastThread()
+{
 	broadcastThread.reset( new std::thread( [&]
 	{
 		while( 1 )
@@ -37,67 +62,79 @@ Server::run();
 			if( !running )
 				break;
 
-			// Get packet to broadcast.
-			auto packet = std::move( packetQueue->dequeue( 1000 ) );
-
-			// Lock the list of streams.
-			std::lock_guard<std::mutex> streamListLock( streamListMutex );
-
-			// Write packet to every stream in the list.
-			auto i = streamList->begin();
-			while( i != streamList->end() )
+			try
 			{
-				auto & stream = *i;
-				size_t size = stream->write( packet->getData(), packet->getSize() );
-				// Stream closed?
-				if( size == 0 )
-				{
-					// Remove the stream from the list which gets closed automatically.
-					i = streamList->erase( i );
-					continue;
-				}
+				// Get packet to broadcast with timeout: 1s.
+				auto packet = std::move( packetQueue.dequeue( 1000 ) );
 
-				++i;
+				// Lock the list of streams.
+				std::lock_guard<std::mutex> streamListLock( streamListMutex );
+
+				// Write packet to every stream in the list.
+				auto i = streamList.begin();
+				while( i != streamList.end() )
+				{
+					auto & stream = *i;
+					size_t size = stream->write( (char *) packet->getData(), packet->getSize() );
+					// Stream closed?
+					if( size == 0 )
+					{
+						// Remove the stream from the list which gets closed automatically.
+						i = streamList.erase( i );
+						continue;
+					}
+
+					++i;
+				}
+			}
+			catch( Utils::TimeoutException & e )
+			{
+				continue;
+			}
+			catch( TCP::Exception & e )
+			{
+				message( std::string( "TCP Error: " ).append( e.what() ) );
 			}
 		}
 	} ) );
-
-	try
-	{
-		// Accept and add incoming clients to the list of TCP śtreams.
-		while( 1 )
-		{
-			auto stream = acceptor.accept();
-			// Lock the list.
-			std::lock_guard<std::mutex> streamListLock( streamListMutex );
-			streamList->push_back( std::move( stream ) );
-		}
-	}
-	catch( TCP::Exception & e )
-	{
-		message( std::string( "TCP Error: " ).append( e.what() ) );
-	}
 }
 
-// stops the connection handlers
+
 void 
 Server::stop()
 {
+	if( !running )
+		return;
+
 	running = false;
-	if( broadcastThread != nullptr )
-		broadcastThread->join();
+
+	try
+	{
+		// Stopping the blocking "accept()" method.
+		acceptor.stop();
+
+		if( broadcastThread != nullptr )
+			broadcastThread->join();
+	}
+	catch( ... )
+	{
+		message( "Cannot stop notification handling server!\nIn order to close this application, use task manager!" );
+	}
 }
 
-// prints out a message (able to do it asynchronously)
+
 void 
 Server::message( const std::string & msg )
 {
 	Global::println( msg );
 }
 
-// transmit a data packet to the clients containing a value that has changed
+
 void
 Server::broadcastNotification( unsigned int entityId, unsigned int valueId, uint32_t value )
 {
+	using namespace Protocol;
 
+	auto notificationPacket = PacketFactory::createSingleValueDataPacket( entityId, valueId, value );
+	packetQueue.enqueue( std::move( notificationPacket ) );
 }

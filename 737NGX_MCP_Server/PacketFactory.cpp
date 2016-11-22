@@ -1,73 +1,92 @@
 #include "PacketFactory.h"
-
+#include "ProtocolException.h"
+#include "TCPReader.h"
+#include "TCPException.h"
 
 using namespace Protocol;
 
 
-std::unique_ptr<Packet> 
-PacketFactory::createPacketFromReceivedData( const uint8_t *data, size_t size )
+std::unique_ptr<Packet>
+PacketFactory::createPacketFromReceivedData( TCP::Stream *stream )
 {
-	if( data == nullptr )
-	{
-		throw PacketException( "nullptr buffer" );
-	}
-
-	// starting with a nullptr
 	std::unique_ptr<Packet> packet( nullptr );
+	TCP::Reader reader( stream, PACKET_MAX_SIZE );
+	uint8_t buf[ PACKET_MAX_SIZE ];
+	size_t pos = 0;
 
-	// checkout packet type
-	int packetType = data[ 0 ];
-	if( packetType == Packet::PACKET_TYPE_EVENT )
+	try
 	{
-		packet.reset( new EventPacket() );
-	}
-	else if( packetType == Packet::PACKET_TYPE_REQUEST )
-	{
-		// evaluate request type
-		int requestType = data[ RequestPacket::BYTE_POS_REQUEST_TYPE ];
-		if( requestType == RequestPacket::REQUEST_TYPE_SINGLE_VALUE )
+		// read packet type and entity-ID
+		readNext( reader, buf, &pos, 2 );
+		uint8_t packetType = buf[ 0 ];
+		uint8_t entityId = buf[ 1 ];
+
+		if( packetType == PacketType::EVENT )
 		{
-			packet.reset( new SingleValueRequestPacket() );
+			packet.reset( new EventPacket() );
 		}
-		else if( requestType == RequestPacket::REQUEST_TYPE_ALL_VALUES )
+		else if( packetType == PacketType::REQUEST )
 		{
-			packet.reset( new AllValuesRequestPacket() );
+			// read request type
+			readNext( reader, buf, &pos, 1 );
+			uint8_t requestType = buf[ 2 ];
+			
+			if( requestType == RequestType::SINGLE_VALUE )
+			{
+				// read value-ID
+				readNext( reader, buf, &pos, 2 );
+				uint16_t valueId = buf[ 3 ] + (buf[ 4 ] << 8);
+				packet.reset( new SingleValueRequestPacket() );
+
+				// assign value-ID
+				auto singleValuePacket = dynamic_cast<SingleValueRequestPacket *>( packet.get() );
+				singleValuePacket->valueId = valueId;
+			}
+			else if( requestType == RequestType::ALL_VALUES )
+			{
+				// no need to read anything
+				packet.reset( new AllValuesRequestPacket() );
+			}
+			else
+			{
+				throw Exception( "invalid request type" );
+			}
+
+			// assign request type
+			auto requestPacket = dynamic_cast<RequestPacket *>( packet.get() );
+			requestPacket->requestType = requestType;
 		}
 		else
 		{
-			throw PacketException( "invalid request type" );
+			throw Exception( "invalid packet type" );
 		}
-	}
-	else
-	{
-		throw PacketException( "invalid packet type" );
-	}
 
-	// size check
-	size_t packetSize = packet->getSize();
-	if( size < packetSize )
-	{
-		throw PacketException( "insufficient buffer" );
+		// assign packet type and entity-ID
+		packet->entityId = entityId;
+		packet->packetType = packetType;
 	}
-
-	// If everything went wrong, copy the data into the packet.
-	std::memcpy( packet->getData(), data, packetSize );
+	catch( TCP::Exception )
+	{
+		throw Exception( "TCP error" );
+	}
 
 	return packet;
 }
 
 
-std::unique_ptr<DataPacket>
-PacketFactory::createSingleValueDataPacket( unsigned int entityId, unsigned int valueId, uint32_t value )
+void 
+PacketFactory::readNext( TCP::Reader & reader, uint8_t *buf, size_t *pos, size_t len )
 {
-	return std::unique_ptr<DataPacket>( 
-		new SingleValueDataPacket( entityId, valueId, value ) );
+	// read packet type and entity-IDbytesToRead = 2;
+	bool success = reader.read( buf, PACKET_MAX_SIZE, *pos, len );
+	if( !success )
+		throw Exception( "could not read packet from client" );
+	*pos += len;
 }
 
 
-std::unique_ptr<DataPacket> 
-PacketFactory::createAllValuesDataPacket( int entityId, uint32_t *values, size_t valueCount )
+void 
+PacketFactory::createRawPacketData( Packet *packet, uint8_t *buf, size_t *len )
 {
-	return std::unique_ptr<DataPacket>(
-		new AllValuesDataPacket( entityId, values, valueCount ) );
+	
 }

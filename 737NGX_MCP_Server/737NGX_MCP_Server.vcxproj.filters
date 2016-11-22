@@ -84,6 +84,9 @@
     <ClCompile Include="NotificationHandlerServer.cpp">
       <Filter>Quelldateien\NotificationHandling</Filter>
     </ClCompile>
+    <ClCompile Include="TCPReader.cpp">
+      <Filter>Quelldateien\TCP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PMDG_NGX_SDK.h">
@@ -151,6 +154,15 @@
     </ClInclude>
     <ClInclude Include="SimConnectOnEntityValueChangedListener.h">
       <Filter>Headerdateien\SimConnect</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPReader.h">
+      <Filter>Headerdateien\TCP</Filter>
+    </ClInclude>
+    <ClInclude Include="ProtocolException.h">
+      <Filter>Headerdateien\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPWriter.h">
+      <Filter>Headerdateien\TCP</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

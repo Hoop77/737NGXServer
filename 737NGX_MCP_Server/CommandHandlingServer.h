@@ -20,7 +20,7 @@ namespace CommandHandling
 	{
 	public:
 		Server(
-			const std::string & ip,
+			const std::string & hostname,
 			uint16_t port,
 			size_t connectionHandlerCount,
 			std::shared_ptr<std::vector<std::unique_ptr<SimConnect::Entity>>> entities

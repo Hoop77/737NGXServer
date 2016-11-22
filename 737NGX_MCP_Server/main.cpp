@@ -54,7 +54,7 @@ int main( int argc, char *argv[] )
 	CommandHandling::Server cmdServer( "127.0.0.1", 7654, 1, entities );
 
 	// Create the notification handling server.
-	NotificationHandling::Server notificationServer( "127.0.0.1", 7653 );
+	NotificationHandling::Server notificationServer( "192.168.178.29", 7653 );
 
 	// When values of entities are changed, the notification server has to broadcast these changes to its clients. 
 	// Therefore we create a listener for each entity and that listeners will be called when

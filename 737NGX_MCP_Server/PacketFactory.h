@@ -2,7 +2,8 @@
 
 
 #include "Packet.h"
-
+#include "TCPStream.h"
+#include "TCPReader.h"
 
 #include <memory>
 
@@ -15,8 +16,10 @@ namespace Protocol
 	class PacketFactory
 	{
 	public:
-		static std::unique_ptr<Packet> createPacketFromReceivedData( const uint8_t *data, size_t size );
-		static std::unique_ptr<DataPacket> createSingleValueDataPacket( unsigned int entityId, unsigned int valueId, uint32_t value );
-		static std::unique_ptr<DataPacket> createAllValuesDataPacket( int entityId, uint32_t *values, size_t valueCount );
+		static std::unique_ptr<Packet> createPacketFromReceivedData( TCP::Stream *stream );
+		static void PacketFactory::createRawPacketData( Packet *packet, uint8_t *buf, size_t *len );
+
+	private:
+		static void PacketFactory::readNext( TCP::Reader & reader, uint8_t *buf, size_t *pos, size_t len );
 	};
 }

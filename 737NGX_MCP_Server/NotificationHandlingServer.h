@@ -17,7 +17,10 @@ namespace NotificationHandling
 	class Server
 	{
 	public:
-		Server( const std::string & ip, uint16_t port );
+		static constexpr int RESPONSE_ERROR = 0;
+		static constexpr int RESPONSE_OK = 1;
+
+		Server( const std::string & hostname, uint16_t port );
 
 		~Server();
 
@@ -35,6 +38,10 @@ namespace NotificationHandling
 
 	private:
 		void startBroadcastThread();
+
+		// Helper function to send a value through a single stream and tries to receive response.
+		// Returns false if client does not respond.
+		bool sendValue( TCP::Stream *stream, Protocol::SingleValueDataPacket *packet );
 
 		// streams to broadcast notifications to
 		std::list<std::unique_ptr<TCP::Stream>> streamList;

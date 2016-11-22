@@ -12,13 +12,13 @@ using namespace CommandHandling;
 
 
 Server::Server(
-	const std::string & ip,
+	const std::string & hostname,
 	uint16_t port,
 	size_t connectionHandlerCount,
 	std::shared_ptr<std::vector<std::unique_ptr<SimConnect::Entity>>> entities )
 	: connectionHandlerCount( connectionHandlerCount )
 	, entities( entities )
-	, acceptor( ip, port )
+	, acceptor( hostname, port )
 	, running( false )
 {
 	using Utils::WorkQueue;

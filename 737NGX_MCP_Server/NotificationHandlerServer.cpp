@@ -8,8 +8,8 @@
 using namespace NotificationHandling;
 
 
-Server::Server( const std::string & ip, uint16_t port )
-	: acceptor( ip, port )
+Server::Server( const std::string & hostname, uint16_t port )
+	: acceptor( hostname, port )
 	, running( false ) {}
 
 
@@ -39,6 +39,7 @@ Server::run()
 		while( running )
 		{
 			auto stream = acceptor.accept();
+			message( stream->getPeerIP().append( " connected to notification server." ) );
 			// Lock the list to add the new stream.
 			std::lock_guard<std::mutex> streamListLock( streamListMutex );
 			streamList.push_back( std::move( stream ) );
@@ -55,6 +56,8 @@ Server::run()
 void 
 Server::startBroadcastThread()
 {
+	using namespace Protocol;
+
 	broadcastThread.reset( new std::thread( [&]
 	{
 		while( 1 )
@@ -74,12 +77,12 @@ Server::startBroadcastThread()
 				auto i = streamList.begin();
 				while( i != streamList.end() )
 				{
-					auto & stream = *i;
-					size_t size = stream->write( (char *) packet->getData(), packet->getSize() );
-					// Stream closed?
-					if( size == 0 )
+					auto stream = i->get();
+					bool success = sendValue( stream, static_cast<SingleValueDataPacket *>( packet.get() ) );
+					if( !success )
 					{
 						// Remove the stream from the list which gets closed automatically.
+						message( stream->getPeerIP().append( " disconnected from notification server." ) );
 						i = streamList.erase( i );
 						continue;
 					}
@@ -91,12 +94,36 @@ Server::startBroadcastThread()
 			{
 				continue;
 			}
-			catch( TCP::Exception & e )
-			{
-				message( std::string( "TCP Error: " ).append( e.what() ) );
-			}
 		}
 	} ) );
+}
+
+
+bool
+Server::sendValue( TCP::Stream *stream, Protocol::SingleValueDataPacket *packet )
+{
+	bool success = true;
+
+	// Send value.
+	stream->write( (char *) packet->getData(), packet->getSize() );
+
+	// Try to receive response.
+	try
+	{
+		uint8_t response = RESPONSE_ERROR;
+		size_t size = stream->read( (char *) &response, 1 );
+		// Check response
+		if( size != 1 || response != RESPONSE_OK )
+		{
+			success = false;
+		}
+	}
+	catch( TCP::Exception & e )
+	{
+		success = false;
+	}
+
+	return success;
 }
 
 

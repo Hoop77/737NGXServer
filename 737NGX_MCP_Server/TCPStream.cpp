@@ -23,7 +23,7 @@ Stream::write( const char *buffer, size_t len )
 {
     int result = send( socket, buffer, (int) len, 0 );
 
-    if( result < 0 )
+    if( result != len )
         throw Exception( "send failed" );
 
     return result;

@@ -102,6 +102,8 @@ Server::startBroadcastThread()
 bool
 Server::sendValue( TCP::Stream *stream, Protocol::SingleValueDataPacket *packet )
 {
+	using namespace Protocol;
+
 	bool success = true;
 
 	// Send value.
@@ -110,10 +112,10 @@ Server::sendValue( TCP::Stream *stream, Protocol::SingleValueDataPacket *packet 
 	// Try to receive response.
 	try
 	{
-		uint8_t response = RESPONSE_ERROR;
-		size_t size = stream->read( (char *) &response, 1 );
+		uint8_t response = Response::ERROR;
+		size_t len = stream->read( (char *) &response, 1 );
 		// Check response
-		if( size != 1 || response != RESPONSE_OK )
+		if( len == 0 || response != Response::OK )
 		{
 			success = false;
 		}

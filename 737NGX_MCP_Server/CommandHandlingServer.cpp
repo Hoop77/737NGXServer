@@ -5,7 +5,7 @@
 #include "TCPException.h"
 #include "PacketFactory.h"
 #include "SimConnectException.h"
-#include "Global.h"
+#include "global.h"
 
 
 using namespace CommandHandling;
@@ -114,9 +114,9 @@ Server::message( const std::string & msg )
 void 
 Server::handleEventPacket( Protocol::EventPacket *eventPacket )
 {
-	unsigned int entityId = eventPacket->getEntityId();
-	unsigned int eventId = eventPacket->getEventId();
-	uint32_t eventParameter = eventPacket->getEventParameter();
+	unsigned int entityId = eventPacket->entityId;
+	unsigned int eventId = eventPacket->eventId;
+	uint32_t eventParameter = eventPacket->eventParameter;
 
 	// transmit the event to the entity
 	try
@@ -139,19 +139,19 @@ Server::handleRequestPacket( Protocol::RequestPacket *requestPacket )
 	std::unique_ptr<DataPacket> dataPacket( nullptr );
 
 	// verify entity-ID
-	unsigned int entityId = requestPacket->getEntityId();
+	unsigned int entityId = requestPacket->entityId;
 
 	try
 	{
 		// get a pointer to the entity
 		SimConnect::Entity *entity = entities->at( entityId ).get();
 
-		int requestType = requestPacket->getRequestType();
+		int requestType = requestPacket->requestType;
 		if( requestType == RequestPacket::REQUEST_TYPE_SINGLE_VALUE )
 		{
 			SingleValueRequestPacket *singleValueRequestPacket = static_cast<SingleValueRequestPacket *>( requestPacket );
 			// get the value-ID from the packet
-			unsigned int valueId = singleValueRequestPacket->getValueId();
+			unsigned int valueId = singleValueRequestPacket->valueId;
 			// get the corresponding value from the entity
 			uint32_t value = entity->getSingleValue( valueId );
 			// create data packet

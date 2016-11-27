@@ -36,7 +36,6 @@ ConnectionHandler::run()
 		// Get the queue from the server. 
 		// To receive packets, we will permanently try to extract streams from the queue.
 		auto streamQueue = server.getStreamQueue();
-		char packetBuffer[ Packet::MAX_SIZE ];
 
 		while( 1 )
 		{
@@ -48,64 +47,67 @@ ConnectionHandler::run()
 				// Remove a stream from the queue with timout 1s.
 				auto stream = streamQueue->dequeue( 1000 );
 
-				try
-				{
-					// Receive incoming packet.
-					size_t size = stream->read( packetBuffer, Packet::MAX_SIZE );
-					if( size == 0 )
-					{
-						server.message( std::string( stream->getPeerIP() ).append( " has closed unexpectedly." ) );
-						continue;
-					}
+				// Read incoming packet.
+				auto receivedPacket = PacketFactory::readPacketFromStream( stream.get() );
 
-					// Create a packet from the received data.
-					auto receivedPacket = PacketFactory::createPacketFromReceivedData( (uint8_t *) packetBuffer, size );
+				handleReceivedPacket( receivedPacket.get(), stream.get() );
 
-					// Evaluate the packet type.
-					int packetType = receivedPacket->getPacketType();
-					// Event-Packet received?
-					if( packetType == Packet::PACKET_TYPE_EVENT )
-					{
-						server.handleEventPacket( 
-							static_cast<EventPacket *>( receivedPacket.get() ) );
-					}
-					// Request-Packet received?
-					else if( packetType == Packet::PACKET_TYPE_REQUEST )
-					{
-						// The server will return a Data-Packet which we will transmit to the client.
-						auto transmitPacket = server.handleRequestPacket(
-								static_cast<RequestPacket *>( receivedPacket.get() ) );
-
-						size = stream->write( (char *) transmitPacket->getData(), transmitPacket->getSize() );
-						if( size == 0 )
-						{
-							server.message( std::string( stream->getPeerIP() ).append( " has closed unexpectedly." ) );
-							continue;
-						}
-					}
-
-					stream->close();
-				}
-				catch( TCP::Exception & e )
-				{
-					server.message( std::string( "Connection Error from: " ).append( stream->getPeerIP() ) );
-				}
-				catch( PacketException & e )
-				{
-					server.message( std::string( "Invalid Packet from: " ).append( stream->getPeerIP() ) );
-				}
-				catch( Exception & e )
-				{
-					server.message( e.what() );
-				}
+				stream->close();
 			}
 			catch( Utils::TimeoutException & e )
 			{
-				// Just try again in case of timeout.
-				continue;
+				// Just keep trying again in case of timeout.
+			}
+			catch( Protocol::Exception & e )
+			{
+				server.message( e.what() );
+			}
+			catch( TCP::Exception & e )
+			{
+				server.message( std::string( "TCP error: " ).append( e.what() ) );
 			}
 		}
 	} ) );
+}
+
+
+void
+ConnectionHandler::handleReceivedPacket( Protocol::Packet *receivedPacket, TCP::Stream *stream )
+{
+	using namespace Protocol;
+
+	try
+	{
+		// Evaluate the packet type.
+		int packetType = receivedPacket->getPacketType();
+		// Event-Packet received?
+		if( packetType == PacketType::EVENT )
+		{
+			// Send quick response.
+			uint8_t response = Response::OK;
+			stream->write (char *) &response, 1 );
+
+			server.handleEventPacket(
+				dynamic_cast<EventPacket *>( receivedPacket) );
+		}
+		// Request-Packet received?
+		else if( packetType == PacketType::REQUEST )
+		{
+			// The server will return a Data-Packet which we will transmit to the client.
+			auto transmitPacket = server.handleRequestPacket(
+					dynamic_cast<RequestPacket *>( receivedPacket ) );
+
+			PacketFactory::writePacketToStream( transmitPacket, stream );
+		}
+	}
+	catch( TCP::Exception & e )
+	{
+		throw;
+	}
+	catch( Protocol::Exception & e )
+	{
+		throw;
+	}
 }
 
 

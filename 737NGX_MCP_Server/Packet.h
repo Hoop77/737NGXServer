@@ -2,7 +2,7 @@
 
 
 #include "PacketFactory.h"
-#include "Global.h"
+#include "global.h"
 #include <assert.h>
 
 
@@ -14,7 +14,7 @@ namespace Protocol
 	// ============================= CONSTANTS ============================= \\
 
 	// fixed max size for every packet
-	static constexpr size_t PACKET_MAX_SIZE = 1024;
+	constexpr size_t PACKET_MAX_SIZE = 1024;
 
 	// packet types
 	namespace PacketType
@@ -29,6 +29,12 @@ namespace Protocol
 	{
 		constexpr int SINGLE_VALUE = 0;
 		constexpr int ALL_VALUES = 1;
+	}
+
+	namespace Response
+	{
+		constexpr int ERROR = 0;
+		constexpr int OK = 1;
 	}
 
 	// ============================= PACKET TYPES ============================= \\
@@ -51,7 +57,7 @@ namespace Protocol
 	// 0		packet type
 	// 1		entity id
 	// 2-5		event-ID		
-	struct EventPacket : public Packet
+	struct EventPacket : Packet
 	{
 		uint32_t eventId;
 		uint32_t eventParameter;
@@ -59,7 +65,7 @@ namespace Protocol
 
 
 	// Abstract packet type representing the idea that some client requests data from the server.
-	struct RequestPacket : public Packet
+	struct RequestPacket : Packet
 	{
 		uint8_t requestType;
 
@@ -75,7 +81,7 @@ namespace Protocol
 	// 1		entity id
 	// 2		request type
 	// 3-4		value-ID
-	struct SingleValueRequestPacket : public RequestPacket
+	struct SingleValueRequestPacket : RequestPacket
 	{
 		uint16_t valueId;
 	};
@@ -88,13 +94,13 @@ namespace Protocol
 	// 0		packet type
 	// 1		entity id
 	// 2		request typ
-	struct AllValuesRequestPacket : public RequestPacket
+	struct AllValuesRequestPacket : RequestPacket
 	{
 	};
 
 
 	// Abstract packet type representing the idea to send data from the server to the client.
-	struct DataPacket : public Packet
+	struct DataPacket : Packet
 	{
 		uint8_t requestType;
 
@@ -111,7 +117,7 @@ namespace Protocol
 	// 2		request typ
 	// 3-4		value-ID
 	// 5-8		value
-	struct SingleValueDataPacket : public DataPacket
+	struct SingleValueDataPacket : DataPacket
 	{
 		uint16_t valueId;
 		uint32_t value;
@@ -126,7 +132,7 @@ namespace Protocol
 	// 1		entity id
 	// 2		request typ
 	// ...		values (limited to the maximum packet size)
-	struct AllValuesDataPacket : public DataPacket
+	struct AllValuesDataPacket : DataPacket
 	{
 		uint32_t *values;
 		size_t valueCount;

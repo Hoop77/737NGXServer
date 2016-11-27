@@ -18,7 +18,7 @@ Stream::~Stream()
 }
 
 
-size_t 
+void
 Stream::write( const char *buffer, size_t len )
 {
     int result = send( socket, buffer, (int) len, 0 );

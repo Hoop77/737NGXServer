@@ -17,9 +17,6 @@ namespace NotificationHandling
 	class Server
 	{
 	public:
-		static constexpr int RESPONSE_ERROR = 0;
-		static constexpr int RESPONSE_OK = 1;
-
 		Server( const std::string & hostname, uint16_t port );
 
 		~Server();

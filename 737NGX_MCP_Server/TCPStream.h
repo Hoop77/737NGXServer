@@ -17,7 +17,7 @@ namespace TCP
 	public:
 		virtual ~Stream();
 
-		size_t write( const char *buffer, size_t len );
+		void write( const char *buffer, size_t len );
 		size_t read( char *buffer, size_t len );
 		void close();
 

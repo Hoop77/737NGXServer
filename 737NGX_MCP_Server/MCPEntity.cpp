@@ -192,3 +192,10 @@ MCPEntity::getAllValues( uint32_t *values )
 		values[ valueId ] = this->values[ valueId ].load();
 	}
 }
+
+
+size_t 
+MCPEntity::getValueCount()
+{
+	return Global::ValueId::MCP::COUNT;
+}

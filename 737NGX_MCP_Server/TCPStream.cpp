@@ -25,8 +25,6 @@ Stream::write( const char *buffer, size_t len )
 
     if( result != len )
         throw Exception( "send failed" );
-
-    return result;
 }
 
 

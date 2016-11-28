@@ -3,6 +3,7 @@
 #include "CommandHandlingException.h"
 #include "Packet.h"
 #include "PacketFactory.h"
+#include "ProtocolException.h"
 #include "TCPException.h"
 #include <string>
 
@@ -64,7 +65,7 @@ ConnectionHandler::run()
 			}
 			catch( TCP::Exception & e )
 			{
-				server.message( std::string( "TCP error: " ).append( e.what() ) );
+				server.message( "TCP error: " + e.what() );
 			}
 		}
 	} ) );
@@ -79,13 +80,13 @@ ConnectionHandler::handleReceivedPacket( Protocol::Packet *receivedPacket, TCP::
 	try
 	{
 		// Evaluate the packet type.
-		int packetType = receivedPacket->getPacketType();
+		int packetType = receivedPacket->packetType;
 		// Event-Packet received?
 		if( packetType == PacketType::EVENT )
 		{
 			// Send quick response.
 			uint8_t response = Response::OK;
-			stream->write (char *) &response, 1 );
+			stream->write( (char *) &response, 1 );
 
 			server.handleEventPacket(
 				dynamic_cast<EventPacket *>( receivedPacket) );
@@ -97,7 +98,7 @@ ConnectionHandler::handleReceivedPacket( Protocol::Packet *receivedPacket, TCP::
 			auto transmitPacket = server.handleRequestPacket(
 					dynamic_cast<RequestPacket *>( receivedPacket ) );
 
-			PacketFactory::writePacketToStream( transmitPacket, stream );
+			PacketFactory::writePacketToStream( transmitPacket.get(), stream );
 		}
 	}
 	catch( TCP::Exception & e )

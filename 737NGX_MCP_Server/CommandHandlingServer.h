@@ -41,7 +41,7 @@ namespace CommandHandling
 		void handleEventPacket( Protocol::EventPacket *eventPacket );
 
 		// returns client requested data
-		std::unique_ptr<Protocol::DataPacket> handleRequestPacket( Protocol::RequestPacket *requestPacket );
+		std::unique_ptr<Protocol::Packet> handleRequestPacket( Protocol::RequestPacket *requestPacket );
 
 		// get pointer to the streams queue
 		Utils::WorkQueue<std::unique_ptr<TCP::Stream>> *getStreamQueue() const { return streamQueue.get(); }

@@ -1,11 +1,6 @@
 #pragma once
 
 
-#include "PacketFactory.h"
-#include "global.h"
-#include <assert.h>
-
-
 #include <memory>
 
 
@@ -33,7 +28,7 @@ namespace Protocol
 
 	namespace Response
 	{
-		constexpr int ERROR = 0;
+		constexpr int FAIL = 0;
 		constexpr int OK = 1;
 	}
 
@@ -56,7 +51,8 @@ namespace Protocol
 	// ----------------
 	// 0		packet type
 	// 1		entity id
-	// 2-5		event-ID		
+	// 2-5		event-ID	
+	// 6-9		event-parameter
 	struct EventPacket : Packet
 	{
 		uint32_t eventId;
@@ -134,7 +130,7 @@ namespace Protocol
 	// ...		values (limited to the maximum packet size)
 	struct AllValuesDataPacket : DataPacket
 	{
-		uint32_t *values;
+		std::unique_ptr<uint32_t> values;
 		size_t valueCount;
 	};
 }

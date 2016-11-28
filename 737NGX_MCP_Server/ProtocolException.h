@@ -1,20 +1,20 @@
 #pragma once
 
 
-#include <exception>
+#include <string>
 
 
 namespace Protocol
 {
-	class Exception : public std::exception
+	class Exception
 	{
 	public:
-		Exception( const char *msg )
+		Exception( std::string msg )
 			: msg( msg ) {}
 
-		const char *what() const throw() { return msg; }
+		std::string what() const { return msg; }
 
 	private:
-		const char *msg;
+		std::string msg;
 	};
 }

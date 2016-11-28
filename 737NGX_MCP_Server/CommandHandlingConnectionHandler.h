@@ -5,6 +5,7 @@
 #include "TCPStream.h"
 #include "WorkQueue.h"
 #include "CommandHandlingServer.h"
+#include "Packet.h"
 
 
 namespace CommandHandling
@@ -21,6 +22,8 @@ namespace CommandHandling
 		void stop();
 
 	private:
+		void handleReceivedPacket( Protocol::Packet *receivedPacket, TCP::Stream *stream );
+
 		Server & server;
 		std::unique_ptr<std::thread> runThread;
 		bool running;

@@ -51,7 +51,7 @@ int main( int argc, char *argv[] )
 	entities->push_back( std::move( mcpEntity ) );
 
 	// Create the command handling server.
-	CommandHandling::Server cmdServer( "127.0.0.1", 7654, 1, entities );
+	CommandHandling::Server cmdServer( "192.168.178.29", 7654, 1, entities );
 
 	// Create the notification handling server.
 	NotificationHandling::Server notificationServer( "192.168.178.29", 7653 );

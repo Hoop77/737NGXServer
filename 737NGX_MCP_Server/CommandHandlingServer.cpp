@@ -5,7 +5,7 @@
 #include "TCPException.h"
 #include "PacketFactory.h"
 #include "SimConnectException.h"
-#include "global.h"
+#include "Global.h"
 
 
 using namespace CommandHandling;
@@ -73,7 +73,7 @@ Server::run()
 		// To do this, someone must call "stop()" on the acceptor (in another thread) which will raise
 		// an exception from the "accept()" method so we must ignore it when "running" is false!
 		if( running )
-			message( std::string( "TCP Error: " ).append( e.what() ) );
+			message( "TCP Error: " + e.what() );
 	}
 }
 
@@ -130,13 +130,13 @@ Server::handleEventPacket( Protocol::EventPacket *eventPacket )
 }
 
 
-std::unique_ptr<Protocol::DataPacket> 
+std::unique_ptr<Protocol::Packet> 
 Server::handleRequestPacket( Protocol::RequestPacket *requestPacket )
 {
 	using namespace Protocol;
 
 	// result
-	std::unique_ptr<DataPacket> dataPacket( nullptr );
+	std::unique_ptr<Packet> packet( nullptr );
 
 	// verify entity-ID
 	unsigned int entityId = requestPacket->entityId;
@@ -147,27 +147,27 @@ Server::handleRequestPacket( Protocol::RequestPacket *requestPacket )
 		SimConnect::Entity *entity = entities->at( entityId ).get();
 
 		int requestType = requestPacket->requestType;
-		if( requestType == RequestPacket::REQUEST_TYPE_SINGLE_VALUE )
+		if( requestType == RequestType::SINGLE_VALUE )
 		{
-			SingleValueRequestPacket *singleValueRequestPacket = static_cast<SingleValueRequestPacket *>( requestPacket );
+			SingleValueRequestPacket *singleValueRequestPacket = static_cast<SingleValueRequestPacket *>(requestPacket);
 			// get the value-ID from the packet
 			unsigned int valueId = singleValueRequestPacket->valueId;
 			// get the corresponding value from the entity
 			uint32_t value = entity->getSingleValue( valueId );
 			// create data packet
-			dataPacket = PacketFactory::createSingleValueDataPacket( entityId, valueId, value );
+			packet = PacketFactory::createSingleValueDataPacket( entityId, valueId, value );
 		}
-		else if( requestType == RequestPacket::REQUEST_TYPE_ALL_VALUES )
+		else if( requestType == RequestType::ALL_VALUES )
 		{
 			AllValuesRequestPacket *allValuesRequestPacket = static_cast<AllValuesRequestPacket *>(requestPacket);
 			// get the number of values of the entity
-			unsigned int valueIdCount = Global::getValueIdCountFromEntityId( entityId );
+			size_t valueCount = entity->getValueCount();
 			// create array of values
-			std::unique_ptr<uint32_t> values( new uint32_t[ valueIdCount ] );
+			std::unique_ptr<uint32_t> values( new uint32_t[ valueCount ] );
 			// get the values from the entity
 			entity->getAllValues( values.get() );
 			// create data packet
-			dataPacket = PacketFactory::createAllValuesDataPacket( entityId, values.get(), valueIdCount );
+			packet = PacketFactory::createAllValuesDataPacket( entityId, std::move( values ), valueCount );
 		}
 		else
 		{
@@ -183,6 +183,6 @@ Server::handleRequestPacket( Protocol::RequestPacket *requestPacket )
 		message( e.what() );
 	}
 
-	return dataPacket;
+	return packet;
 }
 

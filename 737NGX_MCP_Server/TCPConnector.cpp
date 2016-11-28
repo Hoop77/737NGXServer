@@ -75,6 +75,6 @@ Connector::connect( const std::string & server, uint16_t port )
     }
 
     // Create new TCP Stream object.
-    return std::unique_ptr<Stream>(
-        new Stream( connectSocket, server, port ) );
+	return std::unique_ptr<Stream>( 
+		new Stream( connectSocket, server, port ) );
 }

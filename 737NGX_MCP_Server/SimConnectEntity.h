@@ -26,6 +26,7 @@ namespace SimConnect
 		virtual void transmitEvent( unsigned int eventId, uint32_t eventParameter ) = 0;
 		virtual uint32_t getSingleValue( unsigned int valueId ) = 0;
 		virtual void getAllValues( uint32_t *values ) = 0;
+		virtual size_t getValueCount() = 0;
 
 		void obtainSimConnectHandle( HANDLE simConnect );
 

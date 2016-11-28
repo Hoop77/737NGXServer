@@ -81,11 +81,11 @@
     <ClCompile Include="CommandHandlingServer.cpp">
       <Filter>Quelldateien\CommandHandling</Filter>
     </ClCompile>
-    <ClCompile Include="NotificationHandlerServer.cpp">
-      <Filter>Quelldateien\NotificationHandling</Filter>
-    </ClCompile>
     <ClCompile Include="TCPReader.cpp">
       <Filter>Quelldateien\TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="NotificationHandlingServer.cpp">
+      <Filter>Quelldateien\NotificationHandling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -160,9 +160,6 @@
     </ClInclude>
     <ClInclude Include="ProtocolException.h">
       <Filter>Headerdateien\Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="TCPWriter.h">
-      <Filter>Headerdateien\TCP</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

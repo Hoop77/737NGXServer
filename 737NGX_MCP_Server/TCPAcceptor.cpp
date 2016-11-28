@@ -143,6 +143,6 @@ Acceptor::accept()
     );
 
     // Return new TCP Stream.
-    return std::unique_ptr<Stream>(
-        new Stream( acceptSocket, std::string( ip4String ), address.sin_port ) );
+	return std::unique_ptr<Stream>(
+		new Stream( acceptSocket, std::string( ip4String ), address.sin_port ) );
 }

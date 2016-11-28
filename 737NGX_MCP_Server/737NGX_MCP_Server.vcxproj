@@ -151,7 +151,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MCPEntity.cpp" />
     <ClCompile Include="CommandHandlingServer.cpp" />
-    <ClCompile Include="NotificationHandlerServer.cpp" />
+    <ClCompile Include="NotificationHandlingServer.cpp" />
     <ClCompile Include="PacketFactory.cpp" />
     <ClCompile Include="SimConnectClient.cpp" />
     <ClCompile Include="SimConnectEntity.cpp" />
@@ -185,7 +185,6 @@
     <ClInclude Include="TCPException.h" />
     <ClInclude Include="TCPReader.h" />
     <ClInclude Include="TCPStream.h" />
-    <ClInclude Include="TCPWriter.h" />
     <ClInclude Include="WorkQueue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

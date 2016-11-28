@@ -31,6 +31,7 @@ namespace SimConnect
 		void transmitEvent( unsigned int eventId, uint32_t eventParameter );
 		uint32_t getSingleValue( unsigned int valueId );
 		void getAllValues( uint32_t *values );
+		size_t getValueCount();
 
 	private:
 		void setupDataConnection();

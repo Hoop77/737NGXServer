@@ -3,7 +3,6 @@
 #include <iostream>
 #include "TCPAcceptor.h"
 #include "TCPException.h"
-#include "PacketFactory.h"
 #include "SimConnectException.h"
 #include "Global.h"
 
@@ -114,9 +113,9 @@ Server::message( const std::string & msg )
 void 
 Server::handleEventPacket( Protocol::EventPacket *eventPacket )
 {
-	unsigned int entityId = eventPacket->entityId;
-	unsigned int eventId = eventPacket->eventId;
-	uint32_t eventParameter = eventPacket->eventParameter;
+	unsigned int entityId = eventPacket->getEntityId();
+	unsigned int eventId = eventPacket->getEventId();
+	uint32_t eventParameter = eventPacket->getEventParameter();
 
 	// transmit the event to the entity
 	try
@@ -139,23 +138,23 @@ Server::handleRequestPacket( Protocol::RequestPacket *requestPacket )
 	std::unique_ptr<Packet> packet( nullptr );
 
 	// verify entity-ID
-	unsigned int entityId = requestPacket->entityId;
+	unsigned int entityId = requestPacket->getEntityId();
 
 	try
 	{
 		// get a pointer to the entity
 		SimConnect::Entity *entity = entities->at( entityId ).get();
 
-		int requestType = requestPacket->requestType;
+		int requestType = requestPacket->getRequestType();
 		if( requestType == RequestType::SINGLE_VALUE )
 		{
 			SingleValueRequestPacket *singleValueRequestPacket = static_cast<SingleValueRequestPacket *>(requestPacket);
 			// get the value-ID from the packet
-			unsigned int valueId = singleValueRequestPacket->valueId;
+			unsigned int valueId = singleValueRequestPacket->getValueId();
 			// get the corresponding value from the entity
 			uint32_t value = entity->getSingleValue( valueId );
 			// create data packet
-			packet = PacketFactory::createSingleValueDataPacket( entityId, valueId, value );
+			packet.reset( new SingleValueDataPacket( entityId, valueId, value ) );
 		}
 		else if( requestType == RequestType::ALL_VALUES )
 		{
@@ -167,7 +166,7 @@ Server::handleRequestPacket( Protocol::RequestPacket *requestPacket )
 			// get the values from the entity
 			entity->getAllValues( values.get() );
 			// create data packet
-			packet = PacketFactory::createAllValuesDataPacket( entityId, std::move( values ), valueCount );
+			packet.reset( new AllValuesDataPacket( entityId, std::move( values ), valueCount ) );
 		}
 		else
 		{

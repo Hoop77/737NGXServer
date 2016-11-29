@@ -2,7 +2,7 @@
 #include "CommandHandlingServer.h"
 #include "CommandHandlingException.h"
 #include "Packet.h"
-#include "PacketFactory.h"
+#include "PacketIO.h"
 #include "ProtocolException.h"
 #include "TCPException.h"
 #include <string>
@@ -49,7 +49,7 @@ ConnectionHandler::run()
 				auto stream = streamQueue->dequeue( 1000 );
 
 				// Read incoming packet.
-				auto receivedPacket = PacketFactory::readPacketFromStream( stream.get() );
+				auto receivedPacket = PacketIO::readPacketFromStream( stream.get() );
 
 				handleReceivedPacket( receivedPacket.get(), stream.get() );
 
@@ -80,7 +80,7 @@ ConnectionHandler::handleReceivedPacket( Protocol::Packet *receivedPacket, TCP::
 	try
 	{
 		// Evaluate the packet type.
-		int packetType = receivedPacket->packetType;
+		int packetType = receivedPacket->getPacketType();
 		// Event-Packet received?
 		if( packetType == PacketType::EVENT )
 		{
@@ -98,7 +98,7 @@ ConnectionHandler::handleReceivedPacket( Protocol::Packet *receivedPacket, TCP::
 			auto transmitPacket = server.handleRequestPacket(
 					dynamic_cast<RequestPacket *>( receivedPacket ) );
 
-			PacketFactory::writePacketToStream( transmitPacket.get(), stream );
+			PacketIO::writePacketToStream( transmitPacket.get(), stream );
 		}
 	}
 	catch( TCP::Exception & e )

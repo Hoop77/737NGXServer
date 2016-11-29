@@ -36,12 +36,21 @@ namespace Protocol
 
 
 	// The most abstract packet type which is the root of all following packet types.
-	struct Packet
+	class Packet
 	{
-		uint8_t packetType;
-		uint8_t entityId;
+	public:
+		Packet( uint8_t packetType, uint8_t entityId ) 
+			: packetType( packetType )
+			, entityId( entityId ) {}
 
 		virtual ~Packet() {}
+
+		uint8_t getPacketType() { return packetType; }
+		uint8_t getEntityId() { return entityId; }
+
+	private:
+		uint8_t packetType;
+		uint8_t entityId;
 	};
 
 
@@ -53,19 +62,37 @@ namespace Protocol
 	// 1		entity id
 	// 2-5		event-ID	
 	// 6-9		event-parameter
-	struct EventPacket : Packet
+	class EventPacket : public Packet
 	{
+	public:
+		EventPacket( uint8_t entityId, uint32_t eventId, uint32_t eventParameter )
+			: Packet( PacketType::EVENT, entityId )
+			, eventId( eventId )
+			, eventParameter( eventParameter ) {}
+
+		uint32_t getEventId() { return eventId; }
+		uint32_t getEventParameter() { return eventParameter; }
+
+	private:
 		uint32_t eventId;
 		uint32_t eventParameter;
 	};
 
 
 	// Abstract packet type representing the idea that some client requests data from the server.
-	struct RequestPacket : Packet
+	class RequestPacket : public Packet
 	{
-		uint8_t requestType;
+	public:
+		RequestPacket( uint8_t entityId, uint8_t requestType )
+			: Packet( PacketType::REQUEST, entityId )
+			, requestType( requestType ) {}
 
 		virtual ~RequestPacket() {}
+
+		uint8_t getRequestType() { return requestType; }
+
+	private:
+		uint8_t requestType;
 	};
 
 
@@ -77,8 +104,16 @@ namespace Protocol
 	// 1		entity id
 	// 2		request type
 	// 3-4		value-ID
-	struct SingleValueRequestPacket : RequestPacket
+	class SingleValueRequestPacket : public RequestPacket
 	{
+	public:
+		SingleValueRequestPacket( uint8_t entityId, uint16_t valueId )
+			: RequestPacket( entityId, RequestType::SINGLE_VALUE )
+			, valueId( valueId ) {}
+
+		uint16_t getValueId() { return valueId; }
+
+	private:
 		uint16_t valueId;
 	};
 
@@ -90,17 +125,28 @@ namespace Protocol
 	// 0		packet type
 	// 1		entity id
 	// 2		request typ
-	struct AllValuesRequestPacket : RequestPacket
+	class AllValuesRequestPacket : public RequestPacket
 	{
+	public:
+		AllValuesRequestPacket( uint8_t entityId )
+			: RequestPacket( entityId, RequestType::ALL_VALUES ) {}
 	};
 
 
 	// Abstract packet type representing the idea to send data from the server to the client.
-	struct DataPacket : Packet
+	class DataPacket : public Packet
 	{
-		uint8_t requestType;
+	public:
+		DataPacket( uint8_t entityId, uint8_t requestType )
+			: Packet( PacketType::DATA, entityId )
+			, requestType( requestType ) {}
 
 		virtual ~DataPacket() {}
+
+		uint8_t getRequestType() { return requestType; }
+
+	private:
+		uint8_t requestType;
 	};
 
 
@@ -113,8 +159,18 @@ namespace Protocol
 	// 2		request typ
 	// 3-4		value-ID
 	// 5-8		value
-	struct SingleValueDataPacket : DataPacket
+	class SingleValueDataPacket : public DataPacket
 	{
+	public:
+		SingleValueDataPacket( uint8_t entityId, uint16_t valueId, uint32_t value )
+			: DataPacket( entityId, RequestType::SINGLE_VALUE )
+			, valueId( valueId )
+			, value( value ) {}
+
+		uint16_t getValueId() { return valueId; }
+		uint32_t getValue() { return value; }
+
+	private:
 		uint16_t valueId;
 		uint32_t value;
 	};
@@ -128,8 +184,18 @@ namespace Protocol
 	// 1		entity id
 	// 2		request typ
 	// ...		values (limited to the maximum packet size)
-	struct AllValuesDataPacket : DataPacket
+	class AllValuesDataPacket : public DataPacket
 	{
+	public:
+		AllValuesDataPacket( uint8_t entityId, std::unique_ptr<uint32_t> values, size_t valueCount )
+			: DataPacket( entityId, RequestType::ALL_VALUES )
+			, values( std::move( values ) )
+			, valueCount( valueCount ) {}
+
+		uint32_t *getValues() { return values.get(); }
+		size_t getValueCount() { return valueCount; }
+
+	private:
 		std::unique_ptr<uint32_t> values;
 		size_t valueCount;
 	};

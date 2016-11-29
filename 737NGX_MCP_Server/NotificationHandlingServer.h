@@ -47,7 +47,7 @@ namespace NotificationHandling
 		std::mutex streamListMutex;
 
 		// packets (the notification data) to broadcast
-		Utils::WorkQueue<std::unique_ptr<Protocol::Packet>> packetQueue;
+		Utils::WorkQueue<std::unique_ptr<Protocol::SingleValueDataPacket>> packetQueue;
 
 		std::unique_ptr<std::thread> broadcastThread;
 

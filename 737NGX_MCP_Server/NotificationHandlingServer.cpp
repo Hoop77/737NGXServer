@@ -2,7 +2,7 @@
 #include "Global.h"
 #include "TCPException.h"
 #include "ProtocolException.h"
-#include "PacketFactory.h"
+#include "PacketIO.h"
 
 #include <thread>
 
@@ -111,7 +111,7 @@ Server::sendValue( TCP::Stream *stream, Protocol::SingleValueDataPacket *packet 
 	try
 	{
 		// Send value.
-		PacketFactory::writePacketToStream( packet, stream );
+		PacketIO::writePacketToStream( packet, stream );
 
 		// Try to receive response.
 		uint8_t response = Response::FAIL;
@@ -170,6 +170,7 @@ Server::broadcastNotification( unsigned int entityId, unsigned int valueId, uint
 {
 	using namespace Protocol;
 
-	auto notificationPacket = PacketFactory::createSingleValueDataPacket( entityId, valueId, value );
+	std::unique_ptr<SingleValueDataPacket> notificationPacket(
+		new SingleValueDataPacket( entityId, valueId, value ) );
 	packetQueue.enqueue( std::move( notificationPacket ) );
 }

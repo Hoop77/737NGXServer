@@ -72,9 +72,6 @@
     <ClCompile Include="MCPEntity.cpp">
       <Filter>Quelldateien\SimConnect</Filter>
     </ClCompile>
-    <ClCompile Include="PacketFactory.cpp">
-      <Filter>Quelldateien\Protocol</Filter>
-    </ClCompile>
     <ClCompile Include="CommandHandlingConnectionHandler.cpp">
       <Filter>Quelldateien\CommandHandling</Filter>
     </ClCompile>
@@ -86,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="NotificationHandlingServer.cpp">
       <Filter>Quelldateien\NotificationHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketIO.cpp">
+      <Filter>Quelldateien\Protocol</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,17 +122,11 @@
     <ClInclude Include="WorkQueue.h">
       <Filter>Headerdateien\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Packet.h">
-      <Filter>Headerdateien\Protocol</Filter>
-    </ClInclude>
     <ClInclude Include="Exceptions.h">
       <Filter>Headerdateien\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Global.h">
       <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="PacketFactory.h">
-      <Filter>Headerdateien\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="SimConnectException.h">
       <Filter>Headerdateien\SimConnect</Filter>
@@ -159,6 +153,12 @@
       <Filter>Headerdateien\TCP</Filter>
     </ClInclude>
     <ClInclude Include="ProtocolException.h">
+      <Filter>Headerdateien\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet.h">
+      <Filter>Headerdateien\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketIO.h">
       <Filter>Headerdateien\Protocol</Filter>
     </ClInclude>
   </ItemGroup>

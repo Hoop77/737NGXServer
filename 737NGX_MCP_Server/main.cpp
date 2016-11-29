@@ -1,4 +1,5 @@
-#include "TCP.h"
+#define WIN32_LEAN_AND_MEAN
+
 #include "Global.h"
 #include "SimConnectClient.h"
 #include "SimConnectEntity.h"
@@ -6,6 +7,7 @@
 #include "MCPEntity.h"
 #include "CommandHandlingServer.h"
 #include "NotificationHandlingServer.h"
+#include "TCP.h"
 #include "TCPException.h"
 #include <iostream>
 #include <string>

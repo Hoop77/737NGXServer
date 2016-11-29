@@ -11,14 +11,7 @@ PacketIO::readPacketFromStream( TCP::Stream *stream )
 {
 	ReadArgs args( stream );
 
-	try
-	{
-		readPacket( args );
-	}
-	catch( TCP::Exception & e )
-	{
-		throw Exception( "TCP error: " + e.what() );
-	}
+	readPacket( args );
 
 	return std::move( args.packetPtr );
 }
@@ -49,7 +42,7 @@ PacketIO::readPacket( ReadArgs & args )
 			readEventPacket( args, entityId );
 			break;
 
-			// RequestPacket
+		// RequestPacket
 		case PacketType::REQUEST:
 			readRequestPacket( args, entityId );
 			break;
@@ -98,7 +91,7 @@ PacketIO::readRequestPacket( ReadArgs & args, uint32_t entityId )
 			readSingleValueRequestPacket( args, entityId );
 			break;
 
-			// AllValuesRequestPacket
+		// AllValuesRequestPacket
 		case RequestType::ALL_VALUES:
 			readAllValuesRequestPacket( args, entityId );
 			break;

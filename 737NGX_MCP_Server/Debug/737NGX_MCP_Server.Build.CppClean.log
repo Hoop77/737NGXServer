@@ -5,7 +5,7 @@ f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\m
 f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\mcpentity.obj
 f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\commandhandlingserver.obj
 f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\notificationhandlingserver.obj
-f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\packetfactory.obj
+f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\packetio.obj
 f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\simconnectclient.obj
 f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\simconnectentity.obj
 f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\tcp.obj
@@ -16,7 +16,6 @@ f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\t
 f:\dokumente\visual studio 2015\projects\737ngx_server\debug\737ngx_mcp_server.ilk
 f:\dokumente\visual studio 2015\projects\737ngx_server\debug\737ngx_mcp_server.exe
 f:\dokumente\visual studio 2015\projects\737ngx_server\debug\737ngx_mcp_server.pdb
-f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\commandhandlingserver.obj.enc
 f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\737ngx_m.d07c0229.tlog\cl.command.1.tlog
 f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\737ngx_m.d07c0229.tlog\cl.read.1.tlog
 f:\dokumente\visual studio 2015\projects\737ngx_server\737ngx_mcp_server\debug\737ngx_m.d07c0229.tlog\cl.write.1.tlog

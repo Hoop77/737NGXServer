@@ -54,6 +54,29 @@ Stream::close()
 }
 
 
+void
+Stream::setTCPNoDelay( bool opt )
+{
+	// Use old C-style BOOL for compatibility.
+	BOOL flag;
+	if( opt )
+		flag = TRUE;
+	else
+		flag = FALSE;
+
+	int result = setsockopt( 
+		socket,
+		IPPROTO_TCP,
+		TCP_NODELAY,
+		(char *) &flag,
+		sizeof( BOOL ) 
+	);
+
+	if( result != 0 )
+		throw Exception( "setsockopt failed" );
+}
+
+
 std::string 
 Stream::getPeerIP() const
 {

@@ -21,6 +21,8 @@ namespace TCP
 		size_t read( char *buffer, size_t len );
 		void close();
 
+		void setTCPNoDelay( bool opt );
+
 		std::string getPeerIP() const;
 		uint16_t getPeerPort() const;
 

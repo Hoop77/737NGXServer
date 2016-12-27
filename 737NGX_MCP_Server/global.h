@@ -116,6 +116,14 @@ namespace Global
 		}
 	}
 
+	namespace EventParameter
+	{
+		constexpr int MOUSE_WHEEL_UP = 0;
+		constexpr int MOUSE_WHEEL_DOWN = 1;
+		constexpr int MOUSE_LEFT_CLICK = 2;
+		constexpr int MOUSE_RIGHT_CLICK = 3;
+	}
+
 	inline unsigned int getValueIdCountFromEntityId( unsigned int entityId )
 	{
 		switch( entityId )

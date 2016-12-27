@@ -165,8 +165,37 @@ MCPEntity::compare( unsigned int valueId, uint32_t newValue )
 void 
 MCPEntity::transmitEvent( unsigned int eventId, uint32_t eventParameter )
 {
-	SimConnect_TransmitClientEvent( simConnect, 0, eventId, eventParameter,
-		SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY );
+	using namespace Global::EventParameter;
+
+	switch( eventParameter )
+	{
+		case MOUSE_WHEEL_UP:
+			SimConnect_TransmitClientEvent( simConnect, 0, eventId, MOUSE_FLAG_WHEEL_UP,
+				SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY );
+			break;
+
+		case MOUSE_WHEEL_DOWN:
+			SimConnect_TransmitClientEvent( simConnect, 0, eventId, MOUSE_FLAG_WHEEL_DOWN,
+				SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY );
+			break;
+
+		case MOUSE_LEFT_CLICK:
+			SimConnect_TransmitClientEvent( simConnect, 0, eventId, MOUSE_FLAG_LEFTSINGLE,
+				SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY );
+			SimConnect_TransmitClientEvent( simConnect, 0, eventId, MOUSE_FLAG_LEFTRELEASE,
+				SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY );
+			break;
+
+		case MOUSE_RIGHT_CLICK:
+			SimConnect_TransmitClientEvent( simConnect, 0, eventId, MOUSE_FLAG_RIGHTSINGLE,
+				SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY );
+			SimConnect_TransmitClientEvent( simConnect, 0, eventId, MOUSE_FLAG_RIGHTRELEASE,
+				SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY );
+			break;
+
+		default:
+			break;
+	}
 }
 
 

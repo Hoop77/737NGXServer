@@ -47,6 +47,10 @@ ConnectionHandler::run()
 			{
 				// Remove a stream from the queue with timout 1s.
 				auto stream = streamQueue->dequeue( 1000 );
+				// Turn off nagle's algorithm - we're only transferring very small packets.
+				// Since this will only affect the local network, 
+				// we don't need to panic about the internet being collapsed by this.
+				stream->setTCPNoDelay( true );
 
 				// Read incoming packet.
 				auto receivedPacket = PacketIO::readPacketFromStream( stream.get() );

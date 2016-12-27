@@ -41,7 +41,13 @@ Server::run()
 		while( running )
 		{
 			auto stream = acceptor.accept();
+			// Turn off nagle's algorithm - we're only transferring very small packets.
+			// Since this will only affect the local network, 
+			// we don't need to panic about the internet being collapsed by this.
+			stream->setTCPNoDelay( true );
+
 			message( stream->getPeerIP() + " connected to notification server." );
+
 			// Lock the list to add the new stream.
 			std::lock_guard<std::mutex> streamListLock( streamListMutex );
 			streamList.push_back( std::move( stream ) );

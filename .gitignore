@@ -1,0 +1,6 @@
+.vs/
+.vscode/
+Debug/
+*.db
+*.vcxproj
+*.vcxproj_filters

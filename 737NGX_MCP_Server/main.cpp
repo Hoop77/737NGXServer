@@ -53,10 +53,10 @@ int main( int argc, char *argv[] )
 	entities->push_back( std::move( mcpEntity ) );
 
 	// Create the command handling server.
-	CommandHandling::Server cmdServer( "192.168.178.29", 7654, 1, entities );
+	CommandHandling::Server cmdServer( std::string(), 7654, 1, entities );
 
 	// Create the notification handling server.
-	NotificationHandling::Server notificationServer( "192.168.178.29", 7653 );
+	NotificationHandling::Server notificationServer( std::string(), 7653 );
 
 	// When values of entities are changed, the notification server has to broadcast these changes to its clients. 
 	// Therefore we create a listener for each entity and that listeners will be called when
